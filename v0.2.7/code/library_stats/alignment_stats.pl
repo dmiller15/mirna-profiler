@@ -101,8 +101,8 @@ foreach my $adapter_count (@adapter_counts) {
     $total_reads += $adapter_count;
 }
 
-# Will now write it to tmp/job-output/$filename_features and tmp/job-output/$filename_features/bed
-my $outdir = "$filename\_features";
+# Will now write it to tmp/job-output/features and tmp/job-output/features/bed
+my $outdir = "features";
 unless (-d $outdir) {
     mkdir $outdir or die "Could not create subdirectory for feature files $outdir: $!";
 }
