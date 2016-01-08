@@ -5,65 +5,39 @@ use Pod::Usage;
 use File::Find;
 use File::Basename;
 use File::Copy;
+use Cwd;
 
-use vars qw($opt_p);
-getopts("p:");
+use vars qw($opt_s $opt_f $opt_o $opt_a $opt_h $opt_t);
+getopts("s:f:o:a:h:t:");
 
-my $usage = "$0 -p project_directory\n";
-die "$usage" unless $opt_p;
+my $usage = "$0 -s sam_path -f filtered_taglen_path -o softclip_taglen_path -a adapter_taglen_path -h chastity_taglen_path -t alignment_stats_path \n";
+die "$usage" unless $opt_s && $opt_f && $opt_o && $opt_a && $opt_h && $opt_t;
 
 my $r = get_config();
 
-print STDERR "Searching for .sam files to in project directory...\n";
-my @samfiles;
-find(\&findsamfiles, $opt_p);
-print STDERR "Done\n";
-die "No sam files found in $opt_p" unless scalar @samfiles;
+my $filtered_path = $opt_f;
+my $softclip_path = $opt_o;
+my $adapter_path = $opt_a;
+my $chastity_path = $opt_h;
+my $stats_path = $opt_t;
+
+my $sam_path = $opt_s;
 
 my $dir = dirname(__FILE__); #R scripts are in the same directory as this script
 
-mkdir "$opt_p/graphs" unless -e "$opt_p/graphs";
-mkdir "$opt_p/graphs/tags" unless -e "$opt_p/graphs/tags";
-mkdir "$opt_p/graphs/adapter" unless -e "$opt_p/graphs/adapter";
+my $filename = basename($sam_path);
+$filename =~ s/\.[bs]am$//;
+my ($lib, $index) = split('_', $filename);
+$index = '' unless defined $index;
 
-foreach my $samfile (@samfiles) {
-	my $samdir = dirname($samfile);
-	my $filename = basename($samfile);
-	$filename =~ s/\.[bs]am$//;
-	my ($lib, $index) = split('_', $filename);
-	$index = '' unless defined $index;
+my $outdir = getcwd;
 
-	my $datadir = "$samdir/$filename\_features";
-	my $filtered_file = "$datadir/filtered_taglengths.csv";
-	my $softclip_file = "$datadir/softclip_taglengths.csv";
-	my $chastity_file = "$datadir/chastity_taglengths.csv";
-	my $adapter_file = "$samdir/$filename\_adapter.report";
-	
-	system "$r $dir/taglengths.R $datadir $filename $filtered_file tags";
-	system "$r $dir/taglengths.R $datadir $filename $softclip_file softclip";
-	system "$r $dir/taglengths.R $datadir $filename $chastity_file chastity";
+system "$r $dir/taglengths.R $outdir $filename $filtered_path tags";
+system "$r $dir/taglengths.R $outdir $filename $softclip_path softclip";
+system "$r $dir/taglengths.R $outdir $filename $chastity_path chastity";
+system "$r $dir/adapter.R $outdir $filename $adapter_path" if -e $adapter_path;
 
-	system "$r $dir/adapter.R $datadir $filename $adapter_file adapter" if -e $adapter_file;
-
-	#make a copy of tags and adapter under the graphs directory for each access
-	copy("$datadir/$filename\_tags.jpg", "$opt_p/graphs/tags/$filename\_tags.jpg");
-	copy("$datadir/$filename\_adapter.jpg", "$opt_p/graphs/adapter/$filename\_adapter.jpg");
-}
-
-my $proj = basename($opt_p); #use project name for saturation graph title
-my $saturation_source = "$opt_p/alignment_stats.csv";
-system "$r $dir/saturation.R $opt_p/graphs/$proj\_saturation.jpg ".uc($proj)." $saturation_source";
-
-sub findsamfiles {
-	if ($File::Find::name =~ /\.sam$/ || $File::Find::name =~ /\.bam$/) {
-		#skip specialized analyses within _features directories
-		next if $File::Find::name =~ /_features/;
-		#skip files in obsoleted directory
-		next if $File::Find::name =~ /obsoleted/;
-		push(@samfiles, $File::Find::name);
-		print STDERR "\t$File::Find::name\n";
-	}
-}
+system "$r $dir/saturation.R $filename\_saturation.jpg ".uc($filename)." $stats_path";
 
 sub get_config {
 	my $dir = dirname(__FILE__);
@@ -77,3 +51,11 @@ sub get_config {
 	my ($r) = [grep(/^\s*Rscript/, @config)]->[0] =~ /^\s*Rscript\s*=\s*(.+)/ or die "No entry found for Rscript binary in config file.";
 	return $r;
 }
+
+perl /home/ubuntu/bin/profiler/v0.2.7/code/library_stats/graph_libs.pl 
+-s /home/ubuntu/SCRATCH/Mirna/172e576e-ec9c-47d1-a431-6e4ed3be28a5/TCGA-56-7823-01B-11H-2246-13_mirna.sam 
+-f /home/ubuntu/SCRATCH/Mirna/172e576e-ec9c-47d1-a431-6e4ed3be28a5/TCGA-56-7823-01B-11H-2246-13_mirna_features/filtered_taglengths.csv 
+-o /home/ubuntu/SCRATCH/Mirna/172e576e-ec9c-47d1-a431-6e4ed3be28a5/TCGA-56-7823-01B-11H-2246-13_mirna_features/softclip_taglengths.csv 
+-a /home/ubuntu/SCRATCH/Mirna/172e576e-ec9c-47d1-a431-6e4ed3be28a5/TCGA-56-7823-01B-11H-2246-13_mirna_adapter.report 
+-h /home/ubuntu/SCRATCH/Mirna/172e576e-ec9c-47d1-a431-6e4ed3be28a5/TCGA-56-7823-01B-11H-2246-13_mirna_features/chastity_taglengths.csv 
+-t /home/ubuntu/SCRATCH/Mirna/172e576e-ec9c-47d1-a431-6e4ed3be28a5/alignment_stats.csv 
