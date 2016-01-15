@@ -6,6 +6,9 @@ inputs:
   - id: "#bam_path"
     type: File
 
+  - id: "#sam_name"
+    type: string
+
   - id: "#mirna_db"
     type: string
 
@@ -105,15 +108,17 @@ outputs:
 
 steps:
   - id: "#samtools"
-    run: {import: path/to/samtools.cwl.yaml}
+    run: {import: ../tools/samtools.cwl.yaml}
     inputs:
       - id: "#samtools.bam_path"
         source: "#bam_path"
+      - id: "#samtools.output_name"
+        source: "#sam_name"
     outputs:
       - id: "#samtools.sam_file"
 
   - id: "#mir_adapter_report"
-    run: {import: path/to/mir_adapter_report.cwl.yaml}
+    run: {import: ../tools/mir_adapter_report.cwl.yaml}
     inputs:
       - id: "#mir_adapter_report.sam_path"
         source: "#samtools.sam_file"
@@ -121,7 +126,7 @@ steps:
       - id: "#mir_adapter_report.adapter_report"
   
   - id: "#mir_sam_annotator"
-    run: {import: path/to/mir_sam_annotator.cwl.yaml}
+    run: {import: ../tools/mir_sam_annotator.cwl.yaml}
     inputs:
       - id: "#mir_sam_annotator.sam_path"
         source: "#samtools.sam_file"
@@ -135,7 +140,7 @@ steps:
       - id: "#mir_sam_annotator.annot_sam"
   
   - id: "#mir_alignment_stats"
-    run: {import: path/to/mir_alignment_stats.cwl.yaml}
+    run: {import: ../tools/mir_alignment_stats.cwl.yaml}
     inputs:
       - id: "#mir_alignment_stats.sam_path"
         source: "#mir_sam_annotator.annot_sam"
@@ -158,7 +163,7 @@ steps:
       - id: "#mir_alignment_stats.bed_file"
 
   - id: "#mir_tcga"
-    run: {import: path/to/mir_tcga.cwl.yaml}
+    run: {import: ../tools/mir_tcga.cwl.yaml}
     inputs:
       - id: "#mir_tcga.mirna_db"
         source: "#mirna_db"
@@ -179,7 +184,7 @@ steps:
       - id: "#mir_tcga.mirna_quant"
 
   - id: "#mir_expn_matrix"
-    run: {import: path/to/mir_expn_matrix.cwl.yaml}
+    run: {import: ../tools/mir_expn_matrix.cwl.yaml}
     inputs:
       - id: "#mir_expn_matrix.mirna_db"
         source: "#mirna_db"
@@ -195,7 +200,7 @@ steps:
       - id: "#mir_expn_matrix.matrix_norm_log"
 
   - id: "#mir_expn_mimat"
-    run: {import: path/to/mir_expn_mimat.cwl.yaml}
+    run: {import: ../tools/mir_expn_mimat.cwl.yaml}
     inputs:
       - id: "#mir_expn_mimat.mirna_db"
         source: "#mirna_db"
@@ -213,7 +218,7 @@ steps:
       - id: "#mir_expn_mimat.mimat_norm_log"
 
   - id: "#mir_graph"
-    run: {import: path/to/mir_graph.cwl.yaml}
+    run: {import: ../tools/mir_graph.cwl.yaml}
     inputs:
       - id: "#mir_graph.sam_path"
         source: "#mir_sam_annotator.annot_sam"
