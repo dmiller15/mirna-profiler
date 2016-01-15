@@ -1,0 +1,33 @@
+#!/usr/bin/env cwl-runner
+
+description: |
+  Run samtools.
+
+  Usage: cwl-runner <this-file-path> <bam_path> -o <sam_path>
+
+  requirements:
+    - class: DockerRequirement
+      dockerPull: ~docker for samtools
+
+  class: CommandLineTool
+
+  inputs:
+    - id: "#bam_path"
+      type: File
+      inputBinding:
+        position: 1
+
+    - id: "#output_sam"
+      type: string
+      inputBinding:
+        prefix: "-o"
+
+  outputs:
+    - id: "#sam_file"
+      type: File
+      outputBinding:
+        glob:
+	  engine: cwl:JsonPointer
+	  script: /job/output_sam
+
+baseCommand: ["samtools", "view", "-h"]
