@@ -1,0 +1,62 @@
+#!/usr/bin/env cwl-runner
+
+description: |
+  Uses queries miRBase to convert MIMAT IDs to miR names and gets read counts from crossmapped.txt.
+  
+  Usage: cwl-runner <this-file-path> -m <mirna_db> -o <species_code> -s <sam_path> -r <miRNA_path> -c <crossmapped_path>
+    -m:	   Name of the mirna database to use
+    -o:	   Species code of the sample source
+    -s:	   Path to sam file
+    -r:    Path to miRNA.txt file
+    -c:	   Path to crossmapped.txt file
+
+requirements:
+  - class: DockerRequirement
+    dockerPull: quay.io/dmiller15/mir_profiler
+
+inputs:
+  - id: "#mirna_db"
+    type: string
+    inputBinding:
+      prefix: -m
+      
+  - id: "#species_code"
+    type: string
+    inputBinding:
+      prefix: -o
+      
+  - id: "#sam_path"
+     type: File
+    inputBinding:
+      prefix: -s
+
+  - id: "#mirna_path"
+     type: File
+    inputBinding:
+      prefix: -r
+
+  - id: "#crossmapped_path"
+     type: File
+    inputBinding:
+      prefix: -c
+
+outputs:
+  - id: "#mimat"
+     type: File
+    description: "mimat file"
+    outputBinding:
+      glob: expn_matrix_mimat.txt
+
+  - id: "#mimat_norm"
+     type: File
+    description: "mimat norm"
+    outputBinding:
+      glob: expn_matrix_mimat_norm.txt
+
+  - id: "#mimat_norm_log"
+     type: File
+    descripiton: "mimat norm log"
+    outputBinding:
+      glob: expn_matrix_mimat_norm_log.txt
+
+baseCommand: ["service", "mysql", "start", "&&", "perl", "home/ubuntu/bin/mirna-profiler/v0.2.7/library_stats/expression_matrix_mimat.pl"]

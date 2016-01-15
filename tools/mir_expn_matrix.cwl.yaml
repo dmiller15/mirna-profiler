@@ -1,0 +1,74 @@
+#!/usr/bin/env cwl-runner
+
+description: |
+  Generates an miRNA expression matrix with pre-miRNA genes as rows and gets read counts from the mirna_species.txt files.
+
+  Usage: cwl-runner <this-file-path> -m <mirna_db> -o <species_code> -s <sam_path> -r <mirna_path>
+  Required Options:
+    -m:	   Name of the mirna database to use
+    -o:	   Species code of the sample source
+    -s:	   Path to sam file
+    -r:	   Path to miRNA.txt file
+
+requirements:
+  - import: node-engine.cwl
+  - import: envvar-global.cwl
+  - class: DockerRequirement
+    dockerPull: quay.io/dmiller15/mir_profiler
+
+inputs:
+  - id: "#mirna_db"
+    type: string
+    inputBinding:
+      prefix: -m
+      
+  - id: "#species_code"
+    type: string
+    inputBinding:
+      prefix: -o
+      
+  - id: "#sam_path"
+    type: file
+    inputBinding:
+      prefix: -s
+
+  - id: "#mirna_path"
+    type: file
+    inputBinding:
+      prefix: -r
+
+outputs:
+  - id: "#matrix"
+    type: file
+    description: "matrix file"
+    outputBinding:
+      glob:
+        engine: node-engine.cwl
+        script: |
+        {
+        return $job + "expn_matrix.txt"
+        }
+
+  - id: "#matrix_norm"
+    type: file
+    description: "matrix norm"
+    outputBinding:
+      glob:
+        engine: node-engine.cwl
+        script: |
+        {
+        return $job + "expn_matrix_norm.txt"
+        }
+
+  - id: "#matrix_norm_log"
+    type: file
+    descripiton: "matrix norm log"
+    outputBinding:
+      glob:
+        engine: node-engine.cwl
+        script: |
+        {
+        return $job + "expn_matrix_norm_log.txt"
+        }
+
+baseCommand: ["service", "mysql", "start", "&&", "perl", "home/ubuntu/bin/mirna-profiler/v0.2.7/library_stats/expression_matrix.pl"]

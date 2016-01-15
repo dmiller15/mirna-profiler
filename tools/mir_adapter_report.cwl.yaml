@@ -1,0 +1,28 @@
+#!/usr/bin/env cwl-runner
+
+description: |
+  Generates an adapter report for alignments did not have adapter trimming run.
+
+  Usage: cwl-runner <this_file_path> -s <sam_path>
+
+  -s: Path to SAM file
+
+requirements:
+  - import: node-engine.cwl
+  - import: envvar-global.cwl
+
+class: CommandLineTool
+
+inputs:
+  - id: "#sam_path"
+    type: File
+    inputBinding:
+      prefix: "-s"
+
+outputs:
+  - id: "#adapter_report"
+    type: File
+    outputBinding:
+      glob:
+
+baseCommand: awk '{arr[length($10)]+=1} END {for (i in arr) {print i" "arr[i]}}'
