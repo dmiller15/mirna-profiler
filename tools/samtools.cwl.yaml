@@ -30,4 +30,4 @@ outputs:
         engine: cwl:JsonPointer
         script: /job/output_name
 
-baseCommand: ["python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_samtools.py"]
+baseCommand: ["python3", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_samtools.py"]

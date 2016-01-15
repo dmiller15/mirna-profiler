@@ -129,7 +129,7 @@ def main():
 
     # Logging Setup
     logging.basicConfig(
-        filename = os.path.join(project_dir, 'profiling_samtools.log'),
+        filename = 'profiling_samtools.log',
         filemode = 'a',
         level = args.level,
         format = '%(asctime)s %(levelname)s %(message)s',
@@ -139,9 +139,8 @@ def main():
     logger = logging.getLogger(__name__)
     hostname = os.uname()[1]
     logger.info('hostname=%s' % hostname)
-    logger.info('project_dir=%s' % project_dir)
 
-    engine_path = 'sqlite:///' + os.path.join(project_dir, 'profiling_samtools.db')
+    engine_path = 'sqlite:///' + 'profiling_samtools.db'
     engine = sqlalchemy.create_engine(engine_path, isolation_level='SERIALIZABLE')
 
     # Convert the BAMs to SAMs if they do not already exist
