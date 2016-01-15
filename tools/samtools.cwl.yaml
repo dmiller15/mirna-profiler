@@ -5,29 +5,29 @@ description: |
 
   Usage: cwl-runner <this-file-path> <bam_path> -o <output_name>
 
-  requirements:
-    - class: DockerRequirement
-      dockerPull: quay.io/dmiller15/mir-profiler
+requirements:
+  - class: DockerRequirement
+    dockerPull: quay.io/dmiller15/mir_profiler 
 
-  class: CommandLineTool
+class: CommandLineTool
 
-  inputs:
-    - id: "#bam_path"
-      type: File
-      inputBinding:
-        prefix: "-b"
+inputs:
+  - id: "#bam_path"
+    type: File
+    inputBinding:
+      prefix: "-b"
 
-    - id: "#output_name"
-      type: string
-      inputBinding:
-        prefix: "-o"
+  - id: "#output_name"
+    type: string
+    inputBinding:
+      prefix: "-o"
 
-  outputs:
-    - id: "#sam_file"
-      type: File
-      outputBinding:
-        glob:
-	  engine: cwl:JsonPointer
-	  script: /job/output_name
+outputs:
+  - id: "#sam_file"
+    type: File
+    outputBinding:
+      glob:
+        engine: cwl:JsonPointer
+        script: /job/output_name
 
 baseCommand: ["python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_samtools.py"]
