@@ -118,6 +118,22 @@ def main():
 
     sam_path = args.sam_path
 
+    # Logging Setup
+    logging.basicConfig(
+        filename = 'profiling_adapter.log',
+        filemode = 'a',
+        level = args.level,
+        format = '%(asctime)s %(levelname)s %(message)s',
+        datefmt = '%Y-%m-%d_%H:%M:%S_%Z',
+    )
+    logging.getLogger('sqlalchemp.engine').setLevel(logging.INFO)
+    logger = logging.getLogger(__name__)
+    hostname = os.uname()[1]
+    logger.info('hostname=%s' % hostname)
+
+    engine_path = 'sqlite:///' + 'profiling_adapter.db'
+    engine = sqlalchemy.create_engine(engine_path, isolation_level='SERIALIZABLE')
+
     adapter_CMD = ["cat", sam_path, "|", "awk '{arr[length($10)]+=1} END {for (i in arr) {print i\" \"arr[i]}}'", "|", "sort -t \" \" -k1n >", report_path]
     shell_adapter_CMD = ' '.join(adapter_CMD)
     do_shell_command(shell_adapter_CMD, logger)

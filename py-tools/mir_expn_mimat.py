@@ -147,7 +147,7 @@ def main():
     
     # Logging Setup
     logging.basicConfig(
-        filename = os.path.join(project_dir, 'profiling_mimat.log'),
+        filename = 'profiling_mimat.log',
         filemode = 'a',
         level = args.level,
         format = '%(asctime)s %(levelname)s %(message)s',
@@ -157,9 +157,8 @@ def main():
     logger = logging.getLogger(__name__)
     hostname = os.uname()[1]
     logger.info('hostname=%s' % hostname)
-    logger.info('project_dir=%s' % project_dir)
 
-    engine_path = 'sqlite:///' + os.path.join(project_dir, 'profiling_mimat.db')
+    engine_path = 'sqlite:///' + 'profiling_mimat.db'
     engine = sqlalchemy.create_engine(engine_path, isolation_level='SERIALIZABLE')
 
     # Get stats from the alignment annotations
