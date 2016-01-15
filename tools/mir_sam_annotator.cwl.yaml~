@@ -43,4 +43,4 @@ outputs:
     outputBinding:
       glob: *.sam
 
-baseCommand: ["python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_sam_annotator.py"]
+baseCommand: ["service", "mysql", "start", "&&", "perl", "/home/ubuntu/bin/mirna-profiler/v0.2.7/code/annotation/annotate.pl"]

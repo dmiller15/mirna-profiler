@@ -25,4 +25,4 @@ outputs:
     outputBinding:
       glob:
 
-baseCommand: awk '{arr[length($10)]+=1} END {for (i in arr) {print i" "arr[i]}}'
+baseCommand: ["python", "/home/ubuntu/mirna-profiler/py-tools/mir_adapter_report.py"]
