@@ -78,4 +78,4 @@ outputs:
             return $job + "tcga/mirnas.quantification.txt"
           }
 
-baseCommand: ["service", "mysql", "start", "&&", "perl", "/home/ubuntu/bin/mirna-profiler/v0.2.7/custom_output/tcga/tcga.pl"]
+baseCommand: ["python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_tcga.py"]

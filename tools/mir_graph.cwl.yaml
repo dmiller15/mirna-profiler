@@ -73,4 +73,4 @@ outputs:
     outputBinding:
       glob: *_saturation.jpg
 
-baseCommand: ["service", "mysql", "start", "&&", "perl", "home/ubuntu/bin/mirna-profiler/v0.2.7/library_stats/graph_libs.pl"]
+baseCommand: ["python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_graph.py"]

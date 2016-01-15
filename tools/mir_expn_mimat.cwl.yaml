@@ -59,4 +59,4 @@ outputs:
     outputBinding:
       glob: expn_matrix_mimat_norm_log.txt
 
-baseCommand: ["service", "mysql", "start", "&&", "perl", "home/ubuntu/bin/mirna-profiler/v0.2.7/library_stats/expression_matrix_mimat.pl"]
+baseCommand: ["python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_expn_mimat.py"]

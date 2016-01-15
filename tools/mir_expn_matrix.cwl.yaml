@@ -71,4 +71,4 @@ outputs:
         return $job + "expn_matrix_norm_log.txt"
         }
 
-baseCommand: ["service", "mysql", "start", "&&", "perl", "home/ubuntu/bin/mirna-profiler/v0.2.7/library_stats/expression_matrix.pl"]
+baseCommand: ["python", "home/ubuntu/bin/mirna-profiler/py-tools/mir_expn_matrix.py"]
