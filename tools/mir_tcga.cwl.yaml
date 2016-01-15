@@ -1,0 +1,81 @@
+#!/usr/bin/env cwl-runner
+
+description: |
+  The tcga.pl script resolves crossmapped and multimapped reads then formats resulting expression files to the format defined for TCGA. Can be run on a desktop computer. Needs miRBase access.
+
+  Usage: cwl-runner <this-file-path> -m <mirna_db> -o <species_code> -g <ucsc_db> -s <sam_path> -r <mirna_species_path> -c <crossmapped_path> -i <isoforms_path>
+  Required Options:
+    -m:	   Mirbase database
+    -g:	   UCSC database
+    -o:	   Species code
+    -s:	   Path to SAM file
+    -r:	   Path to miRNA species file
+    -c:	   Path to crossmapped file
+    -i:	   Path to isoform file
+
+requirements:
+  - import: node-engine.cwl
+  - import: envvar-global.cwl
+  - class: DockerRequirement
+    dockerPull: quay.io/dmiller15/mir_profiler
+
+inputs:
+  - id: "#mirna_db"
+    type: string
+    inputBinding:
+      prefix: -m
+      
+  - id: "#ucsc_db"
+    type: string
+    inputBinding:
+      prefix: -g
+
+  - id: "#species_code"
+    type: string
+    inputBinding:
+      prefix: -o
+
+  - id: "#sam_path"
+    type: File
+    inputBinding:
+      prefix: -s
+
+  - id: "#mirna_species"
+    type: File
+    inputBinding:
+      prefix: -r
+
+  - id: "#crossmapped"
+    type: File
+    inputBinding:
+      prefix: -c
+
+  - id: "#isoforms"
+    type: File
+    inputBinding:
+      prefix: -i
+
+outputs:
+  - id: "#isoform_quant"
+    type: File
+    description: "TCGA quantification of the isoform data"
+    outputBinding:
+      glob:
+        engine: node-engine.cwl
+        script: |
+          {
+            return $job + "tcga/isoforms.quantification.txt"
+          }
+
+  - id: "#mirna_quant"
+    type: File
+    description: "TCGA quantification of the mirna data"
+    outputBinding:
+      glob:
+        engine: node-engine.cwl
+        script: |
+          {
+            return $job + "tcga/mirnas.quantification.txt"
+          }
+
+baseCommand: ["service", "mysql", "start", "&&", "perl", "/home/ubuntu/bin/mirna-profiler/v0.2.7/custom_output/tcga/tcga.pl"]
