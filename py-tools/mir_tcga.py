@@ -110,10 +110,6 @@ def main():
     )
     parser.set_defaults(level = logging.INFO)
 
-    # Start up mysql
-    mysql_CMD = ['service', 'mysql', 'start']
-    do_command(mysql_CMD,logger)
-
     # Required flags
     parser.add_argument('-m', '--mirna_db',
                         required = True,
@@ -132,7 +128,6 @@ def main():
     )
     parser.add_argument('-s', '--sam_path',
                         required = True,
-                        type = is_dir,
                         help = 'Path to directory containing bams.',
     )
     parser.add_argument('-r', '--mirna_species',
@@ -173,12 +168,16 @@ def main():
     engine_path = 'sqlite:///' + 'profiling_tcga.db'
     engine = sqlalchemy.create_engine(engine_path, isolation_level='SERIALIZABLE')
 
+    # Start up mysql
+    mysql_CMD = ['service', 'mysql', 'start']
+    do_command(mysql_CMD,logger)
+
     # Generate TCGA formatted results
     logger.info('Beginning: TCGA formatted results generation')
-    tcga_CMD = ['perl', '/home/ubuntu/bin/mirna/v0.2.7/code/custom_output/tcga/tcga.pl', '-m', mirna_db, '-o', species_code, '-g', ucsc_db, '-s', sam_path, '-r', mirna_species, '-c', crossmapped, '-i', isoforms]
+    tcga_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/custom_output/tcga/tcga.pl', '-m', mirna_db, '-o', species_code, '-g', ucsc_db, '-s', sam_path, '-r', mirna_species, '-c', crossmapped, '-i', isoforms]
     do_command(tcga_CMD, logger)
     # Store time command will go here
     logger.info('Completed: TCGA formatted results generation')
 
-if __name__ = '__main__':
+if __name__ == '__main__':
     main()

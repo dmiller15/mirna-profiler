@@ -134,10 +134,13 @@ def main():
     engine_path = 'sqlite:///' + 'profiling_adapter.db'
     engine = sqlalchemy.create_engine(engine_path, isolation_level='SERIALIZABLE')
 
-    adapter_CMD = ["cat", sam_path, "|", "awk '{arr[length($10)]+=1} END {for (i in arr) {print i\" \"arr[i]}}'", "|", "sort -t \" \" -k1n >", report_path]
+    sam_name = os.path.basename(sam_path)
+    sam_base, sam_ext = os.path.splitext(sam_name)
+    adapter_name = sam_base + "_adapter.report"
+    adapter_CMD = ["cat", sam_path, "|", "awk '{arr[length($10)]+=1} END {for (i in arr) {print i\" \"arr[i]}}'", "|", "sort -t \" \" -k1n >", adapter_name]
     shell_adapter_CMD = ' '.join(adapter_CMD)
     do_shell_command(shell_adapter_CMD, logger)
-    logger.info('Adapter report: %s created for BAM file: %s' % (report_path, bam_path))
+    logger.info('Adapter report: %s created for BAM file: %s' % (adapter_name, sam_path))
 
 if __name__ == '__main__':
     main()

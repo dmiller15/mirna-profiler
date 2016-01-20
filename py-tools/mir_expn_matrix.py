@@ -110,10 +110,6 @@ def main():
     )
     parser.set_defaults(level = logging.INFO)
 
-    # Start up mysql
-    mysql_CMD = ['service', 'mysql', 'start']
-    do_command(mysql_CMD,logger)
-
     # Required flags
     parser.add_argument('-m', '--mirna_db',
                         required = True,
@@ -135,7 +131,7 @@ def main():
     )                    
     args = parser.parse_args()                   
 
-    mirna_db = args. mirna_db
+    mirna_db = args.mirna_db
     species_code = args.species_code
     sam_path = args.sam_path
     mirna_path = args.mirna_path

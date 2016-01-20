@@ -110,10 +110,6 @@ def main():
     )
     parser.set_defaults(level = logging.INFO)
 
-    # Start up mysql
-    mysql_CMD = ['service', 'mysql', 'start']
-    do_command(mysql_CMD,logger)
-
     # Required flags
     parser.add_argument('-m', '--mirna_db',
                         required = True,
@@ -133,7 +129,7 @@ def main():
                         required = True,
                         help = 'Path to miRNA.txt file',
     )
-    parser.add_argument('-r', '--crossmapped_path',
+    parser.add_argument('-c', '--crossmapped',
                         required = True,
                         help = 'Path to crossmapped.txt file',
     )
@@ -143,7 +139,7 @@ def main():
     species_code = args.species_code
     sam_path = args.sam_path
     mirna_path = args.mirna_path
-    crossmapped = args.crossmapped_path
+    crossmapped = args.crossmapped
     
     # Logging Setup
     logging.basicConfig(
@@ -160,6 +156,10 @@ def main():
 
     engine_path = 'sqlite:///' + 'profiling_mimat.db'
     engine = sqlalchemy.create_engine(engine_path, isolation_level='SERIALIZABLE')
+
+    # Start up mysql
+    mysql_CMD = ['service', 'mysql', 'start']
+    do_command(mysql_CMD,logger)
 
     # Get stats from the alignment annotations
     logger.info('Beginning: Mature miRNA gene expression matrix genreation')

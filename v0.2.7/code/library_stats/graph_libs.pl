@@ -7,18 +7,18 @@ use File::Basename;
 use File::Copy;
 use Cwd;
 
-use vars qw($opt_s $opt_f $opt_o $opt_a $opt_h $opt_t);
-getopts("s:f:o:a:h:t:");
+use vars qw($opt_s $opt_f $opt_o $opt_a $opt_c $opt_t);
+getopts("s:f:o:a:c:t:");
 
-my $usage = "$0 -s sam_path -f filtered_taglen_path -o softclip_taglen_path -a adapter_taglen_path -h chastity_taglen_path -t alignment_stats_path \n";
-die "$usage" unless $opt_s && $opt_f && $opt_o && $opt_a && $opt_h && $opt_t;
+my $usage = "$0 -s sam_path -f filtered_taglen_path -o softclip_taglen_path -a adapter_taglen_path -c chastity_taglen_path -t alignment_stats_path \n";
+die "$usage" unless $opt_s && $opt_f && $opt_o && $opt_a && $opt_c && $opt_t;
 
 my $r = get_config();
 
 my $filtered_path = $opt_f;
 my $softclip_path = $opt_o;
 my $adapter_path = $opt_a;
-my $chastity_path = $opt_h;
+my $chastity_path = $opt_c;
 my $stats_path = $opt_t;
 
 my $sam_path = $opt_s;
@@ -51,11 +51,3 @@ sub get_config {
 	my ($r) = [grep(/^\s*Rscript/, @config)]->[0] =~ /^\s*Rscript\s*=\s*(.+)/ or die "No entry found for Rscript binary in config file.";
 	return $r;
 }
-
-perl /home/ubuntu/bin/profiler/v0.2.7/code/library_stats/graph_libs.pl 
--s /home/ubuntu/SCRATCH/Mirna/172e576e-ec9c-47d1-a431-6e4ed3be28a5/TCGA-56-7823-01B-11H-2246-13_mirna.sam 
--f /home/ubuntu/SCRATCH/Mirna/172e576e-ec9c-47d1-a431-6e4ed3be28a5/TCGA-56-7823-01B-11H-2246-13_mirna_features/filtered_taglengths.csv 
--o /home/ubuntu/SCRATCH/Mirna/172e576e-ec9c-47d1-a431-6e4ed3be28a5/TCGA-56-7823-01B-11H-2246-13_mirna_features/softclip_taglengths.csv 
--a /home/ubuntu/SCRATCH/Mirna/172e576e-ec9c-47d1-a431-6e4ed3be28a5/TCGA-56-7823-01B-11H-2246-13_mirna_adapter.report 
--h /home/ubuntu/SCRATCH/Mirna/172e576e-ec9c-47d1-a431-6e4ed3be28a5/TCGA-56-7823-01B-11H-2246-13_mirna_features/chastity_taglengths.csv 
--t /home/ubuntu/SCRATCH/Mirna/172e576e-ec9c-47d1-a431-6e4ed3be28a5/alignment_stats.csv 

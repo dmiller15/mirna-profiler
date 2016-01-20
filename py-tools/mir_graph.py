@@ -110,10 +110,6 @@ def main():
     )
     parser.set_defaults(level = logging.INFO)
 
-    # Start up mysql
-    mysql_CMD = ['service', 'mysql', 'start']
-    do_command(mysql_CMD,logger)
-
     # Required flags
     parser.add_argument('-s', '--sam_path',
                         required = True,
@@ -124,19 +120,19 @@ def main():
                         help = 'Path to filtered_taglength.csv',
     )
     parser.add_argument('-o', '--softclip_taglen',
-                        required = True
+                        required = True,
                         help = 'Path to softclip_taglength.csv',
     )
     parser.add_argument('-a', '--adapter_taglen',
-                        required = True
+                        required = True,
                         help = 'Path to adapter report',
     )
-    parser.add_argument('-h', '--chastity_taglen',
-                        required = True
+    parser.add_argument('-c', '--chastity_taglen',
+                        required = True,
                         help = 'Path to chastity_taglength.csv',
     )
-    parser.add_argument('-t', '--alignemnt_stats',
-                        required = True
+    parser.add_argument('-t', '--alignment_stats',
+                        required = True,
                         help = 'Path to alignment_stats.csv',
     )
     args = parser.parse_args()                   
@@ -145,7 +141,7 @@ def main():
     filtered_taglen = args.filtered_taglen
     softclip_taglen = args.softclip_taglen
     adapter_taglen = args.adapter_taglen
-    chastity_taglen = args.chastitiy_taglen
+    chastity_taglen = args.chastity_taglen
     alignment_stats = args.alignment_stats
     
     # Logging Setup
@@ -164,12 +160,16 @@ def main():
     engine_path = 'sqlite:///' + 'profiling_graph.db'
     engine = sqlalchemy.create_engine(engine_path, isolation_level='SERIALIZABLE')
 
+    # Start up mysql
+    mysql_CMD = ['service', 'mysql', 'start']
+    do_command(mysql_CMD,logger)
+
     # Generate the graphs for the annotation data
     logger.info('Beginning: Annotation graph generation')
-    graph_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/library_stats/graph_libs.pl', '-s', sam_path, '-f', filtered_taglen, '-o', softclip_taglen, '-a', adapter_taglen, '-h', chastity_taglen, '-t', alignment_stats]
+    graph_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/library_stats/graph_libs.pl', '-s', sam_path, '-f', filtered_taglen, '-o', softclip_taglen, '-a', adapter_taglen, '-c', chastity_taglen, '-t', alignment_stats]
     do_command(graph_CMD, logger)
     # Store time command will go here
     logger.info('Completed: Annotation graph generation')
 
-if __name__ = '__main__':
+if __name__ == '__main__':
     main()

@@ -99,7 +99,7 @@ def store_time(uuid, cmd, output, logger):
     return df
 
 def main():
-    parser = argparse.ArgumentParser('BAm to SAM conversion',
+    parser = argparse.ArgumentParser('BAM to SAM conversion',
                                      description = 'Use samtools to convert a SAM to BAM.',
     )
 

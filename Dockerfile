@@ -39,9 +39,6 @@ USER ubuntu
 RUN mkdir ${HOME}/bin
 WORKDIR ${HOME}/bin
 
-# Get and install the miRNA profiler
-RUN git clone -b develop https://github.com/dmiller15/mirna-profiler.git
-
 # Get and install genetorrent
 RUN wget https://cghub.ucsc.edu/software/downloads/GeneTorrent/3.8.7/genetorrent-common_3.8.7-ubuntu2.207-14.04_amd64.deb \
 && wget https://cghub.ucsc.edu/software/downloads/GeneTorrent/3.8.7/genetorrent-download_3.8.7-ubuntu2.207-14.04_amd64.deb
@@ -79,5 +76,15 @@ RUN service mysql start \
 # Delete the table files
 RUN rm *.txt *.sql
 
-ENV mirna_profiler 0.10
+USER ubuntu
+WORKDIR ${HOME}/bin
+
+ENV mirna_profiler 0.11
+
+# Get and install the miRNA profiler
+RUN git clone -b develop https://github.com/dmiller15/mirna-profiler.git
+
+USER root
 WORKDIR ${HOME}
+
+

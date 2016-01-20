@@ -110,10 +110,6 @@ def main():
     )
     parser.set_defaults(level = logging.INFO)
 
-    # Start up mysql
-    mysql_CMD = ['service', 'mysql', 'start']
-    do_command(mysql_CMD,logger)
-
     # Required flags
     parser.add_argument('-m', '--mirna_db',
                         required = True,
@@ -132,7 +128,6 @@ def main():
     )
     parser.add_argument('-s', '--sam_path',
                         required = True,
-                        type = is_dir,
                         help = 'Path to directory containing bams.',
     )
     args = parser.parse_args()
@@ -158,6 +153,10 @@ def main():
     engine_path = 'sqlite:///' + 'profiling_annotation.db'
     engine = sqlalchemy.create_engine(engine_path, isolation_level='SERIALIZABLE')
 
+    # Start up mysql
+    mysql_CMD = ['service', 'mysql', 'start']
+    do_command(mysql_CMD,logger)
+
     # Annotate the SAM files
     logger.info('Beginning: SAM file annotation')
     annotate_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/annotation/annotate.pl', '-m', mirna_db, '-u', ucsc_db, '-o', species_code, '-s', sam_path]
@@ -165,5 +164,5 @@ def main():
     # Store time command will go here
     logger.info('Completed: SAM file annotation')
 
-if __name__ = '__main__':
+if __name__ == '__main__':
     main()
