@@ -3,13 +3,13 @@
 description: |
   Generates an adapter report for alignments did not have adapter trimming run.
 
-  Usage: cwl-runner <this_file_path> -s <sam_path>
+  Usage: cwl-runner <this_file_path> --sam_path <sam_path>
 
-  -s: Path to SAM file
+  --sam_paths: Path to SAM file
 
 requirements:
-  - import: node-engine.cwl
-  - import: envvar-global.cwl
+  - class: DockerRequirement
+    dockerPull: quay.io/dmiller15/mir-profiler
 
 class: CommandLineTool
 
@@ -17,12 +17,12 @@ inputs:
   - id: "#sam_path"
     type: File
     inputBinding:
-      prefix: "-s"
+      prefix: "--sam_path"
 
 outputs:
   - id: "#adapter_report"
     type: File
     outputBinding:
-      glob:
+      glob: ./*adapter.report
 
-baseCommand: ["python", "/home/ubuntu/mirna-profiler/py-tools/mir_adapter_report.py"]
+baseCommand: ["python3", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_adapter_report.py"]

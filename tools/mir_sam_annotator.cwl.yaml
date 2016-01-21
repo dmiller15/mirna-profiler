@@ -3,44 +3,44 @@
 description: |
   The annotation process takes one .sam files and produces an annotated version o the .sam files where each read in each file is given an annotation based on its coordinates. A three base pair overlap with the coordinates of a known genomic feature is required for a read to be annotated. In the event that the coordinate range of an aligned read overlaps features in multiple databases, the read is annotated with each feature type overlapped, but the read is counted toward the expression of only the highest priority feature.
 
-  Usage: cwl-runner <this-file-path> -m <mirna_db> -u <ucsc_db> -o <species_code> -s <sam_path>
+  Usage: cwl-runner <this-file-path> --mirna_db <mirna_db> --ucsc_db <ucsc_db> --species_code <species_code> --sam_path <sam_path>
   Required Options:
-    -m:	   Name of mirna database to use for annotation (e.g. mirna_current)
-    -u:	   Name of ucsc database to use for annoation (e.g. hg38)
-    -o:	   Species code of sample source (e.g. hsa)
-    -s:	   Path to sam file  
+    --mirna_db:	   Name of mirna database to use for annotation (e.g. mirna_current)
+    --ucsc_db:	   Name of ucsc database to use for annoation (e.g. hg38)
+    --species_code:	   Species code of sample source (e.g. hsa)
+    --sam_path:	   Path to sam file  
 
 requirements:
   - class: DockerRequirement
-    dockerPull: quay.io/dmiller15/mir_profiler
+    dockerPull: quay.io/dmiller15/mir-profiler
 
 class: CommandLineTool
 
 inputs:
-  - id:"#mirna_db"
+  - id: "#mirna_db"
     type: string
     inputBinding:
-      prefix: "-m"
+      prefix: "--mirna_db"
 
   - id: "#ucsc_db"
     type: string
     inputBinding:
-      prefix: "-u"
+      prefix: "--ucsc_db"
 
   - id: "#species_code"
     type: string
     inputBinding:
-      prefix: "-o"
+      prefix: "--species_code"
 
   - id: "#sam_path"
     type: File
     inputBinding:
-      prefix: "-s"
+      prefix: "--sam_path"
 
 outputs:
   - id: "#annot_sam"
     type: File
     outputBinding:
-      glob: *.sam
+      glob: ./*.sam
 
-baseCommand: ["python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_sam_annotator.py"]
+baseCommand: ["python3", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_sam_annotator.py"]
