@@ -87,4 +87,3 @@ RUN git clone -b develop https://github.com/dmiller15/mirna-profiler.git
 
 USER root
 WORKDIR ${HOME}
-CMD /usr/bin/mysqld_safe
