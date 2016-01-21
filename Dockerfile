@@ -71,8 +71,8 @@ RUN service mysql start \
 && mysql mirna_current --local-infile=1 -e "load data local infile 'mirna_species.txt' into table mirna_species" \
 && mysql mirna_current --local-infile=1 -e "load data local infile 'mirna_chromosome_build.txt' into table mirna_chromosome_build" \
 && mysql mirna_current --local-infile=1 -e "load data local infile 'mirna_mature.txt' into table mirna_mature" \
-&& mysql mirna_current --local-infile=1 -e "load data local infile 'mirna_pre_mature.txt' into table mirna_pre_mature"
-&& mysql -e "set global innodb_fast_shutdown = 0;"
+&& mysql mirna_current --local-infile=1 -e "load data local infile 'mirna_pre_mature.txt' into table mirna_pre_mature" \
+&& mysql -e "set global innodb_fast_shutdown = 0;" \
 && service mysql stop
 
 # Delete the table files
