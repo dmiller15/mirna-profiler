@@ -72,7 +72,7 @@ RUN service mysql start \
 && mysql mirna_current --local-infile=1 -e "load data local infile 'mirna_chromosome_build.txt' into table mirna_chromosome_build" \
 && mysql mirna_current --local-infile=1 -e "load data local infile 'mirna_mature.txt' into table mirna_mature" \
 && mysql mirna_current --local-infile=1 -e "load data local infile 'mirna_pre_mature.txt' into table mirna_pre_mature" \
-&& mysql -e "set global innodb_fast_shutdown = 0;" \
+&& mysql -e "set global innodb_fast_shutdown = 0" \
 && service mysql stop
 
 # Delete the table files
@@ -81,7 +81,7 @@ RUN rm *.txt *.sql
 USER ubuntu
 WORKDIR ${HOME}/bin
 
-ENV mirna_profiler 0.14
+ENV mirna_profiler 0.15
 
 # Get and install the miRNA profiler
 RUN git clone -b develop https://github.com/dmiller15/mirna-profiler.git
