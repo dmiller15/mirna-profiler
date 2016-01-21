@@ -80,7 +80,7 @@ RUN rm *.txt *.sql
 USER ubuntu
 WORKDIR ${HOME}/bin
 
-ENV mirna_profiler 0.16
+ENV mirna_profiler 0.17
 
 # Get and install the miRNA profiler
 RUN git clone -b develop https://github.com/dmiller15/mirna-profiler.git
