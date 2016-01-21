@@ -77,7 +77,7 @@ outputs:
     source: "#mir_expn_matrix.matrix"
   - id: "#matrix_norm"
     type: File
-    source; "#mir_expn_matrix.matrix_norm"
+    source: "#mir_expn_matrix.matrix_norm"
   - id: "#matrix_norm_log"
     type: File
     source: "#mir_expn_matrix.matrix_norm_log"
@@ -86,7 +86,7 @@ outputs:
     source: "#mir_expn_mimat.mimat"
   - id: "#mimat_norm"
     type: File
-    source; "#mir_expn_mimat.mimat_norm"
+    source: "#mir_expn_mimat.mimat_norm"
   - id: "#mimat_norm_log"
     type: File
     source: "#mir_expn_mimat.mimat_norm_log"
@@ -227,7 +227,7 @@ steps:
       - id: "#mir_graph.softclip_taglen"
         source: "#mir_alignment_stats.softclip_taglen"
       - id: "#mir_graph.adapter_taglen"
-        source: #awk.adapter.report
+        source: "#mir_adapter_report.adapter_report" 
       - id: "#mir_graph.chastity_taglen"
         source: "#mir_alignment_stats.chastity_taglen"
       - id: "#mir_graph.alignment_stats"

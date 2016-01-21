@@ -7,7 +7,7 @@ description: |
 
 requirements:
   - class: DockerRequirement
-    dockerPull: quay.io/dmiller15/mir-profiler 
+    dockerPull: quay.io/dmiller15/mir-profiler
 
 class: CommandLineTool
 
@@ -15,12 +15,12 @@ inputs:
   - id: "#bam_path"
     type: File
     inputBinding:
-      prefix: "-b"
+      prefix: "--bam_path"
 
   - id: "#output_name"
     type: string
     inputBinding:
-      prefix: "-o"
+      prefix: "--output_name"
 
 outputs:
   - id: "#sam_file"
