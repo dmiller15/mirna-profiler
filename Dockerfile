@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y --force-yes \
     s3cmd \
     time \
     wget \
-    mysql-server \
+    mysql-server-5.6 \
     samtools
  
 WORKDIR /var/lib/mysql/
