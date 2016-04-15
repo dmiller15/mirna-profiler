@@ -16,6 +16,10 @@ my $MIN_OVERLAP = 3; #overlap must be by at least $MIN_OVERLAP bases
 my $STEMLOOP_START = 1;
 my $STEMLOOP_END = 6;
 
+my $test1;
+my $test2;
+my $test3;
+my $test4;
 #reference hashes
 my (
 	$mirna_co, $mirna_idx,
@@ -31,7 +35,7 @@ my (
 	$snorna_co, $snorna_idx,
 	$trna_co, $trna_idx,
 	$rrna_co, $rrna_idx,
-	$snrna_co, $snrna_idx,
++	$snrna_co, $snrna_idx,
 	$scrna_co, $scrna_idx,
 	$srprna_co, $srprna_idx,
 	$rna_co, $rna_idx,
@@ -196,7 +200,7 @@ sub build_reference_hashes {
 		$mirna_star_co, $mirna_star_idx,
 		$mirna_stem_co, $mirna_stem_idx,
 		$mirna_pre_co, $mirna_pre_idx) = mirbase_hashes($mirbase, $species_code, $chr_format, $mt_format);
-	print STDERR "Done\n";
+	print STDERR "Done\n" ;
 
 	print STDERR "\tUCSC...\n";
 	($gene_co, $gene_idx,
@@ -226,12 +230,11 @@ sub build_reference_hashes {
 sub mirbase_hashes {
 	my ($mirbase, $species, $chr_format, $mt_format) = @_;
 	my ($dbname, $dbhost, $dbuser, $dbpass) = get_db($mirbase);
-	my $dbh_mirbase = DBI->connect("DBI:mysql:database=$dbname;host=$dbhost", $dbuser, $dbpass, {AutoCommit => 0, PrintError => 1}) || die "Could not connect to database: $DBI::errstr";
+	my $dbh_mirbase = DBI->connect("DBI:Pg:database=$dbname;host=$dbhost", $dbuser, $dbpass, {AutoCommit => 0, PrintError => 1}) || die "Could not connect to database: $DBI::errstr";
 
 	#get mirbase species code from organism code
 	my $species_code = $dbh_mirbase->selectrow_array("SELECT auto_id FROM mirna_species WHERE organism = '$species'");	
 	die "$species organism code not found in database" unless defined $species_code;
-
 	my (%mirna_co, %mirna_idx,
 		%mirna_mature_co, %mirna_mature_idx,
 		%mirna_star_co, %mirna_star_idx,
@@ -267,7 +270,7 @@ sub mirbase_hashes {
 			$mature_start = $start + $mature_from - 1;
 			$mature_end = $start + $mature_to - 1;
 		}
-		elsif ($strand eq '-') {
+		elsif ($strand eq '-' ) {
 			#"start" is the smaller number, but this corresponds to the 3p end of the miRNA on the - strand
 			$mature_start = $end - $mature_to + 1;
 			$mature_end = $end - $mature_from + 1;
@@ -318,8 +321,7 @@ sub mirbase_hashes {
 sub ucsc_hashes {
 	my ($ucsc_db, $chr_format, $mt_format) = @_;
 	my ($dbname, $dbhost, $dbuser, $dbpass) = get_db($ucsc_db);
-	my $dbh_ucsc = DBI->connect("DBI:mysql:database=$dbname;host=$dbhost", $dbuser, $dbpass, {AutoCommit => 1, PrintError => 1}) || die "Could not connect to database: $DBI::errstr"; #autocommit set to try to allow auto_reconnect
-	$dbh_ucsc->{mysql_auto_reconnect} = 1;
+	my $dbh_ucsc = DBI->connect("DBI:Pg:database=$dbname;host=$dbhost", $dbuser, $dbpass, {AutoCommit => 1, PrintError => 1}) || die "Could not connect to database: $DBI::errstr"; #autocommit set to try to allow auto_reconnect
 	
 	my (%gene_co, %gene_idx,
 		%exon_co, %exon_idx,
@@ -526,20 +528,23 @@ sub ucsc_gene_table_query {
 	}
 
 	my $ucsc_gene_table;
-	my $ucsc_gene_query;	
-	my $sth = $dbh_ucsc->prepare('SHOW TABLES LIKE ?');
-	$sth->execute('knownGene');
-	$sth->bind_columns(\$ucsc_gene_table);
-	$sth->fetch;
+	my $ucsc_gene_query;
+	my @tables = $dbh_ucsc->tables();
+        foreach my $table (@tables) {
+                if ($table eq 'public.knowngene') {
+                        $ucsc_gene_table = 'knownGene';
+                }
+        }
 	$ucsc_gene_query = "SELECT x.geneSymbol AS name, kg.chrom, kg.strand, kg.txStart, kg.txEnd, kg.cdsStart, kg.cdsEnd, kg.exonStarts, kg.exonEnds FROM knownGene kg JOIN kgXref x ON x.kgID = kg.name".$subclause;
 	unless (defined $ucsc_gene_table) {
-		$sth->execute('refGene');
-		$sth->bind_columns(\$ucsc_gene_table);
-		$sth->fetch;
-		$ucsc_gene_query = "SELECT x.geneSymbol AS name, r.chrom, r.strand, r.txStart, r.txEnd, r.cdsStart, r.cdsEnd, r.exonStarts, r.exonEnds FROM refGene r JOIN kgXref x ON x.refseq = r.name".$subclause;
+                foreach my $table (@tables) {
+                        if ($table eq 'public.refgene') {
+                                $ucsc_gene_table = 'refGene';
+                        }
+                }    
+                $ucsc_gene_query = "SELECT x.geneSymbol AS name, r.chrom, r.strand, r.txStart, r.txEnd, r.cdsStart, r.cdsEnd, r.exonStarts, r.exonEnds FROM refGene r JOIN kgXref x ON x.refseq = r.name".$subclause;
 	}
 	die "Neither knownGene nor refGene table found in UCSC database, update script to find another source for genes\n" unless defined $ucsc_gene_table;
-	$sth->finish;
 	return $ucsc_gene_query;
 }
 
@@ -548,16 +553,14 @@ sub ucsc_rmsk_chr_tables {
 	#checks if the rmsk table for the organism is 1 table or divided by chr
 	my $dbh_ucsc = shift;
 	my (@chr_tables, $chr_table);
-	my $sth = $dbh_ucsc->prepare('SHOW TABLES LIKE ?');
-	$sth->execute('%rmsk');
-	$sth->bind_columns(\$chr_table);
-	while ($sth->fetchrow_arrayref()) {
-		#if there is more than 1 underscore (to separate chr from rmsk), don't count the table
-		my $num_ = ($chr_table =~ tr/_/_/);
-		next if $num_ > 1;
-		push(@chr_tables, $chr_table);
-	}
-	$sth->finish;
+        my @tables = $dbh_ucsc->tables();
+        foreach $chr_table (@tables) {
+                if ($chr_table =~ /rmsk$/) {
+                        my $num_ = ($chr_table =~ tr/_/_/);
+                        next if $num_ > 1;
+                        push(@chr_tables, $chr_table);
+                }
+        }
 	return @chr_tables;
 }
 
@@ -579,15 +582,15 @@ sub addto_overlaphash {
 	}
 
 	#save the info for this element in a hash
-  $loc_ref->{$id}{set}{"$start-$end"} = 1;
-  $loc_ref->{$id}{chr} = $chrstrand;
+        $loc_ref->{$id}{set}{"$start-$end"} = 1;
+        $loc_ref->{$id}{chr} = $chrstrand;
 
-  #Add this element to a hash table to speed up the lookups later on
-  my $start_ind = int($start/$BINSIZE);
-  my $stop_ind = int($end/$BINSIZE);
-  foreach( $start_ind-1 ..$stop_ind+1 ) {
-    $list_ref->{$chrstrand}{$_}{$id} = 1;
-  }
+        #Add this element to a hash table to speed up the lookups later on
+        my $start_ind = int($start/$BINSIZE);
+        my $stop_ind = int($end/$BINSIZE);
+        foreach( $start_ind-1 ..$stop_ind+1 ) {
+                $list_ref->{$chrstrand}{$_}{$id} = 1;
+        }
 }
 
 sub overlapcoordinates {
@@ -599,24 +602,24 @@ sub overlapcoordinates {
 	#if olap_all is true, overlap goes through and finds every match, otherwise return the first match found
 	my %return_hash;
 
-  #find all the features that overlap with the given region
-  my $strt = int($start/$BINSIZE);
-  my $stp = int($end/$BINSIZE);
-  foreach( $strt ..$stp ) {
+        #find all the features that overlap with the given region
+        my $strt = int($start/$BINSIZE);
+        my $stp = int($end/$BINSIZE);
+        foreach( $strt ..$stp ) {
 		next unless exists $list_ref->{$chrstrand} && exists $list_ref->{$chrstrand}{$_};
-    foreach my $ref_id (keys %{ $list_ref->{$chrstrand}{$_} } ) {
-      #if there is any overlap
-			foreach my $coords (keys %{$loc_ref->{$ref_id}{set}}) {
-				my ($ref_start, $ref_end) = split('-', $coords);
-				if ($ref_start <= $end && $ref_end >= $start) {
-					#remove ___\d+ added when building the hash
-					$ref_id =~ s/___\d+//;
-					$return_hash{$ref_id} = 1	;			
-					return %return_hash unless $olap_all;
-				}
-			}
-    }
-  }
+                foreach my $ref_id (keys %{ $list_ref->{$chrstrand}{$_} } ) {
+                        #if there is any overlap
+		        foreach my $coords (keys %{$loc_ref->{$ref_id}{set}}) {
+			        my ($ref_start, $ref_end) = split('-', $coords);
+			        if ($ref_start <= $end && $ref_end >= $start) {
+				        #remove ___\d+ added when building the hash
+				        $ref_id =~ s/___\d+//;
+				        $return_hash{$ref_id} = 1;			
+				        return %return_hash unless $olap_all;
+			        }
+		        }
+                } 
+        }
 	return %return_hash;
 }
 

@@ -14,7 +14,7 @@ die "$usage" unless $opt_m && $opt_o && $opt_g && $opt_v;
 my $db = $opt_m;
 my $species = $opt_o;
 my ($dbname, $dbhost, $dbuser, $dbpass) = get_db($db);
-my $dbh_mirbase = DBI->connect("DBI:mysql:database=$dbname;host=$dbhost", $dbuser, $dbpass, {AutoCommit => 0, PrintError => 1}) || die "Could not connect to database: $DBI::errstr";
+my $dbh_mirbase = DBI->connect("DBI:Pg:database=$dbname;host=$dbhost", $dbuser, $dbpass, {AutoCommit => 0, PrintError => 1}) || die "Could not connect to database: $DBI::errstr";
 
 #get mirbase species code from organism code
 my $species_code = $dbh_mirbase->selectrow_array("SELECT auto_id FROM mirna_species WHERE organism = '$species'");
