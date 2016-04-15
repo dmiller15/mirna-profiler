@@ -140,10 +140,6 @@ def main():
     engine_path = 'sqlite:///' + 'profiling_stats.db'
     engine = sqlalchemy.create_engine(engine_path, isolation_level='SERIALIZABLE')
 
-    # Start up mysql
-    mysql_CMD = ['service', 'mysql', 'start']
-    do_command(mysql_CMD,logger)
-
     # Get stats from the alignment annotations
     logger.info('Beginning: Alignment stats generation')
     stats_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/library_stats/alignment_stats.pl', '-s', sam_path, '-a', adapter_path]

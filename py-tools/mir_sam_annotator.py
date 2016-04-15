@@ -153,10 +153,6 @@ def main():
     engine_path = 'sqlite:///' + 'profiling_annotation.db'
     engine = sqlalchemy.create_engine(engine_path, isolation_level='SERIALIZABLE')
 
-    # Start up mysql
-    mysql_CMD = ['service', 'mysql', 'start']
-    do_command(mysql_CMD,logger)
-
     # Annotate the SAM files
     logger.info('Beginning: SAM file annotation')
     annotate_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/annotation/annotate.pl', '-m', mirna_db, '-u', ucsc_db, '-o', species_code, '-s', sam_path]
