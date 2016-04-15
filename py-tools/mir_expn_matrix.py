@@ -152,10 +152,6 @@ def main():
     engine_path = 'sqlite:///' + 'profiling_matrix.db'
     engine = sqlalchemy.create_engine(engine_path, isolation_level='SERIALIZABLE')
 
-    # Start up mysql
-    mysql_CMD = ['service', 'mysql', 'start']
-    do_command(mysql_CMD,logger)
-
     # Generate the expression matrices for pre-miRNA
     logger.info('Beginning: Pre-miRNA gene expression matrix generation')
     matrix_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/library_stats/expression_matrix.pl', '-m', mirna_db, '-o', species_code, '-s', species_code, '-r', mirna_path]

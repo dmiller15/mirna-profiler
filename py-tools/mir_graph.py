@@ -160,10 +160,6 @@ def main():
     engine_path = 'sqlite:///' + 'profiling_graph.db'
     engine = sqlalchemy.create_engine(engine_path, isolation_level='SERIALIZABLE')
 
-    # Start up mysql
-    mysql_CMD = ['service', 'mysql', 'start']
-    do_command(mysql_CMD,logger)
-
     # Generate the graphs for the annotation data
     logger.info('Beginning: Annotation graph generation')
     graph_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/library_stats/graph_libs.pl', '-s', sam_path, '-f', filtered_taglen, '-o', softclip_taglen, '-a', adapter_taglen, '-c', chastity_taglen, '-t', alignment_stats]

@@ -157,10 +157,6 @@ def main():
     engine_path = 'sqlite:///' + 'profiling_mimat.db'
     engine = sqlalchemy.create_engine(engine_path, isolation_level='SERIALIZABLE')
 
-    # Start up mysql
-    mysql_CMD = ['service', 'mysql', 'start']
-    do_command(mysql_CMD,logger)
-
     # Get stats from the alignment annotations
     logger.info('Beginning: Mature miRNA gene expression matrix genreation')
     mimat_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/library_stats/expression_matrix_mimat.pl', '-m', mirna_db, '-o', species_code, '-s', sam_path, '-r', mirna_path, '-c', crossmapped]
