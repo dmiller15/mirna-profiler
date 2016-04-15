@@ -123,7 +123,7 @@ sub get_mirna_genes {
     my $db = shift;
     my $species = shift;
     my ($dbname, $dbhost, $dbuser, $dbpass) = get_db($db);
-    my $dbh_mirbase = DBI->connect("DBI:mysql:database=$dbname;host=$dbhost", $dbuser, $dbpass, {AutoCommit => 0, PrintError => 1}) || die "Could not connect to database: $DBI::errstr";
+    my $dbh_mirbase = DBI->connect("DBI:Pg:database=$dbname;host=$dbhost", $dbuser, $dbpass, {AutoCommit => 0, PrintError => 1}) || die "Could not connect to database: $DBI::errstr";
     #get mirbase species code from organism code
     my $species_code = $dbh_mirbase->selectrow_array("SELECT auto_id FROM mirna_species WHERE organism = '$species'");
     die "$species_code organism code not found in database" unless defined $species_code;
