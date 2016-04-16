@@ -4,6 +4,7 @@ use Getopt::Std;
 use vars qw ($opt_m $opt_o $opt_h $opt_s $opt_r $opt_c);
 getopts('m:o:h:s:r:c:');
 use DBI;
+use Cwd;
 use File::Find;
 use File::Basename;
 
@@ -180,8 +181,8 @@ sub trim_id {
 
 sub get_db {
     my $dbname = shift;
-    my $dir = dirname(__FILE__);
-    my $db_connections = "$dir/../../config/db_connections.cfg";
+    my $dir = getcwd; 
+    my $db_connections = "$dir/db_connections.cfg";
     open DB, $db_connections or die "Could not find database connections file $db_connections";
     my @connections = <DB>;
     close DB;

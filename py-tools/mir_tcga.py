@@ -113,12 +113,12 @@ def main():
     # Required flags
     parser.add_argument('-m', '--mirna_db',
                         required = True,
-                        choices = ['mirna_current'],
+                        choices = ['prod_bioinfo'],
                         help = 'Name of desired miRbase.',
     )
     parser.add_argument('-g', '--ucsc_db',
                         required = True,
-                        choices = ['hg38'],
+                        choices = ['prod_bioinfo'],
                         help = 'Name of desired UCSC database.',
     )
     parser.add_argument('-o', '--species_code',
@@ -142,6 +142,10 @@ def main():
                         required = True,
                         help = 'Path to isoforms.txt',
     )
+    parser.add_argument('-x', '--db_connect',                  
+                        required = True,
+                        help = 'Path to db_connection file',                  
+    )
     args = parser.parse_args()
 
     mirna_db = args.mirna_db
@@ -151,7 +155,8 @@ def main():
     mirna_species = args.mirna_species
     crossmapped = args.crossmapped
     isoforms = args.isoforms
-    
+    connect_path = args.db_connect    
+
     # Logging Setup
     logging.basicConfig(
         filename = 'profiling_tcga.log',

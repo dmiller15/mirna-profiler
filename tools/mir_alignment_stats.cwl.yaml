@@ -3,10 +3,7 @@
 description: |
   Annotated read information is collated into summary reports by alignment_stats.pl.
 
-  Usage: cwl-runner <this-file-path> -s <sam_path> -a <adapter_path>
-  Required Options:
-    -s	   Path to SAM file
-    -a	   Path to adapter report
+  Usage: cwl-runner <this-file-path> --sam_path <sam_path> --adapter_path <adapter_path>
 
 requirements:
   - import: node-engine.cwl
@@ -20,11 +17,11 @@ inputs:
   - id: "#sam_path"
     type: File
     inputBinding:
-      prefix: "-s"
+      prefix: -s
   - id: "#adapter_path"
     type: File
     inputBinding:
-      prefix: "-a"
+      prefix: -a
 
 outputs:
   - id: "#alignment_stats"

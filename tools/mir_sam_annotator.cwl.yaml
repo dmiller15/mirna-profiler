@@ -1,14 +1,17 @@
 #!/usr/bin/env cwl-runner
 
-description: |
-  The annotation process takes one .sam files and produces an annotated version o the .sam files where each read in each file is given an annotation based on its coordinates. A three base pair overlap with the coordinates of a known genomic feature is required for a read to be annotated. In the event that the coordinate range of an aligned read overlaps features in multiple databases, the read is annotated with each feature type overlapped, but the read is counted toward the expression of only the highest priority feature.
+description: >
+  The annotation process takes one .sam files and produces an annotated version 
+  of the .sam files where each read in each file is given an annotation based on 
+  its coordinates. A three base pair overlap with the coordinates of a known genomic
+  feature is required for a read to be annotated. In the event that the coordinate
+  range of an aligned read overlaps features in multiple databases, the read is
+  annotated with each feature type overlapped, but the read is counted toward the
+  expression of only the highest priority feature.
 
-  Usage: cwl-runner <this-file-path> --mirna_db <mirna_db> --ucsc_db <ucsc_db> --species_code <species_code> --sam_path <sam_path>
-  Required Options:
-    --mirna_db:	   Name of mirna database to use for annotation (e.g. mirna_current)
-    --ucsc_db:	   Name of ucsc database to use for annoation (e.g. hg38)
-    --species_code:	   Species code of sample source (e.g. hsa)
-    --sam_path:	   Path to sam file  
+  Usage: >
+    cwl-runner <this-file-path> --mirna_db <mirna_db> --ucsc_db <ucsc_db> 
+    --species_code <species_code> --sam_path <sam_path> --connect_path <conect_path>
 
 requirements:
   - class: DockerRequirement
@@ -20,22 +23,27 @@ inputs:
   - id: "#mirna_db"
     type: string
     inputBinding:
-      prefix: "--mirna_db"
+      prefix: -m
 
   - id: "#ucsc_db"
     type: string
     inputBinding:
-      prefix: "--ucsc_db"
+      prefix: -u
 
   - id: "#species_code"
     type: string
     inputBinding:
-      prefix: "--species_code"
+      prefix: -o
 
   - id: "#sam_path"
     type: File
     inputBinding:
-      prefix: "--sam_path"
+      prefix: -s
+
+  - id: "#connect_path"
+    type: File
+    inputBinding:
+      prefix: -x
 
 outputs:
   - id: "#annot_sam"

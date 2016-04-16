@@ -1,17 +1,14 @@
 #!/usr/bin/env cwl-runner
 
 description: |
-  The tcga.pl script resolves crossmapped and multimapped reads then formats resulting expression files to the format defined for TCGA. Can be run on a desktop computer. Needs miRBase access.
+  The tcga.pl script resolves crossmapped and multimapped reads then formats resulting 
+  expression files to the format defined for TCGA. Can be run on a desktop computer. 
+  Needs miRBase access.
 
-  Usage: cwl-runner <this-file-path> -m <mirna_db> -o <species_code> -g <ucsc_db> -s <sam_path> -r <mirna_species_path> -c <crossmapped_path> -i <isoforms_path>
-  Required Options:
-    -m:	   Mirbase database
-    -g:	   UCSC database
-    -o:	   Species code
-    -s:	   Path to SAM file
-    -r:	   Path to miRNA species file
-    -c:	   Path to crossmapped file
-    -i:	   Path to isoform file
+  Usage: >
+    cwl-runner <this-file-path> --mirna_db <mirna_db> --species_code <species_code> 
+    --ucsc_db <ucsc_db> --sam_path <sam_path> --mirna_species <mirna_species_path> 
+    --crossmapped <crossmapped_path> --isoforms <isoforms_path> --connect_path <connect_path>
 
 requirements:
   - import: node-engine.cwl
@@ -54,6 +51,11 @@ inputs:
     type: File
     inputBinding:
       prefix: -i
+
+  - id: "#connect_path"
+    type: File
+    inputBinding:
+      prefix: -x
 
 outputs:
   - id: "#isoform_quant"
