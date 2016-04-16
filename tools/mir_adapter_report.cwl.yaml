@@ -5,8 +5,6 @@ description: |
 
   Usage: cwl-runner <this_file_path> --sam_path <sam_path>
 
-  --sam_paths: Path to SAM file
-
 requirements:
   - class: DockerRequirement
     dockerPull: quay.io/dmiller15/mir-profiler
@@ -17,7 +15,7 @@ inputs:
   - id: "#sam_path"
     type: File
     inputBinding:
-      prefix: "--sam_path"
+      prefix: -s
 
 outputs:
   - id: "#adapter_report"

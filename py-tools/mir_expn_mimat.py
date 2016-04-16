@@ -113,7 +113,7 @@ def main():
     # Required flags
     parser.add_argument('-m', '--mirna_db',
                         required = True,
-                        choices = ['mirna_current'],
+                        choices = ['prod_bioinfo'],
                         help = 'Name of desired miRbase.',
     )
     parser.add_argument('-o', '--species_code',
@@ -133,6 +133,10 @@ def main():
                         required = True,
                         help = 'Path to crossmapped.txt file',
     )
+    parser.add_argument('-x', '--db_connect',                  
+                        required = True,
+                        help = 'Path to db_connection file',                  
+    )
     args = parser.parse_args()
 
     mirna_db = args.mirna_db
@@ -140,6 +144,7 @@ def main():
     sam_path = args.sam_path
     mirna_path = args.mirna_path
     crossmapped = args.crossmapped
+    connect_path = args.db_connect
     
     # Logging Setup
     logging.basicConfig(

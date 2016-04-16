@@ -3,7 +3,9 @@
 description: |
   Run samtools.
 
-  Usage: cwl-runner <this-file-path> <bam_path> -o <output_name>
+  Usage: >
+    cwl-runner <this-file-path> --bam_path <bam_path> 
+    --output_name <output_name>
 
 requirements:
   - class: DockerRequirement
@@ -15,12 +17,12 @@ inputs:
   - id: "#bam_path"
     type: File
     inputBinding:
-      prefix: "--bam_path"
+      prefix: -b
 
   - id: "#output_name"
     type: string
     inputBinding:
-      prefix: "--output_name"
+      prefix: -o
 
 outputs:
   - id: "#sam_file"
