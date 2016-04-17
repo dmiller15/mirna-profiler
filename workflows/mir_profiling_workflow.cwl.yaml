@@ -18,6 +18,9 @@ inputs:
   - id: "#species_code"
     type: string
 
+  - id: "#connect_path"
+    type: File
+
 outputs:
   - id: "#adapter_report"
     type: File
@@ -136,6 +139,8 @@ steps:
         source: "#ucsc_db"
       - id: "#mir_sam_annotator.species_code"
         source: "#species_code" 
+      - id: "#mir_sam_annotator.connect_path"
+        source: "#connect_path"
     outputs:
       - id: "#mir_sam_annotator.annot_sam"
   
@@ -179,6 +184,8 @@ steps:
         source: "#mir_alignment_stats.crossmapped"
       - id: "#mir_tcga.isoforms"
         source: "#mir_alignment_stats.isoforms"
+      - id: "#mir_tcga.connect_path"
+        source: "#connect_path"
     outputs:
       - id: "#mir_tcga.isoform_quant"
       - id: "#mir_tcga.mirna_quant"
@@ -194,6 +201,8 @@ steps:
         source: "#mir_sam_annotator.annot_sam"
       - id: "#mir_expn_matrix.mirna_path"
         source: "#mir_alignment_stats.mirna_species"
+      - id: "#mir_expn_matrix.connect_path"
+        source: "#connect_path"
     outputs:
       - id: "#mir_expn_matrix.matrix"
       - id: "#mir_expn_matrix.matrix_norm"
@@ -212,6 +221,8 @@ steps:
         source: "#mir_alignment_stats.mirna"
       - id: "#mir_expn_mimat.crossmapped_path"
         source: "#mir_alignment_stats.crossmapped"
+      - id: "#mir_expn_mimat.connect_path"
+        source: "#connect_path"
     outputs:
       - id: "#mir_expn_mimat.mimat"
       - id: "#mir_expn_mimat.mimat_norm"
@@ -232,3 +243,11 @@ steps:
         source: "#mir_alignment_stats.chastity_taglen"
       - id: "#mir_graph.alignment_stats"
         source: "#mir_alignment_stats.alignment_stats"
+      - id: "#mir_graph.connect_path"
+        source: "#connect_path"
+    outputs:
+      - id: "#mir_graph.tags_graph"
+      - id: "#mir_graph.softclip_graph"
+      - id: "#mir_graph.adapter_graph"
+      - id: "#mir_graph.chastity_graph"
+      - id: "#mir_graph.saturation_graph"
