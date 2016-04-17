@@ -161,4 +161,4 @@ outputs:
       items: File
     glob: /job/feature/bed/*.txt.gz
 
-baseCommand: ["python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_alignment_stats.py"]
+baseCommand: ["python3", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_alignment_stats.py"]
