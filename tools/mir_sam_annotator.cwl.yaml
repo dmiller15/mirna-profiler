@@ -49,6 +49,6 @@ outputs:
   - id: "#annot_sam"
     type: File
     outputBinding:
-      glob: ./*.sam
+      glob: ./*.sam.annot
 
 baseCommand: ["python3", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_sam_annotator.py"]

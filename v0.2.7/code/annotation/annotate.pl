@@ -22,8 +22,8 @@ my $sam_path = $opt_s;
 # No longer seaerching for sam files
 
 # Since we are writing to job/output we only need a name for the output
-my $samname = basename($sam_path);
-# Don't need a new name for the annotation since it will be written in a different directory
+my $input_sam = basename($sam_path);
+my $samname = "$input_sam.annot";
 
 # build coordinate and index hashes out of reference data for overlapcoordinates
 build_reference_hashes($opt_m, $opt_u, $opt_o, $sam_path);
