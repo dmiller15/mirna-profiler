@@ -6,8 +6,6 @@ description: |
   Usage: cwl-runner <this-file-path> --sam_path <sam_path> --adapter_path <adapter_path>
 
 requirements:
-  - import: node-engine.cwl
-  - import: envvar-global.cwl
   - class: DockerRequirement
     dockerPull: quay.io/dmiller15/mir_profiler
 
@@ -28,137 +26,133 @@ outputs:
     type: File
     description: "CSV file with alignment stats"
     outputBinding:
-      glob:
-        engine: node-engine.cwl
-        script: |
-          {
-          return $job + "alignment_stats.csv";
-          }
+      glob: ./alignment_stats.csv
   - id: "#mirna_species"
     type: File
     description: "TXT file with information on miRNA species"
     outputBinding:
-      glob:
-        engine: node-engine.cwl
-        script: |
-          {
-          return $job + "features/mirna_species.txt";
-          }
+      glob: ./features/mirna_species.txt
   - id: "#crossmapped"
     type: File
     description: "Crossmapped reads"
     outputBinding:
-      glob:
-        engine: node-engine.cwl
-        script: |
-          {
-          return $job + "features/crossmapped.txt";
-          }
+      glob: ./features/crossmapped.txt
   - id: "#filtered_taglen"
     type: File
     description: "Filtered taglenths"
     outputBinding:
-      glob:
-        engine: node-engine.cwl
-        script: |
-          {
-          return $job + "features/filtered_taglengths.csv";
-          }
+      glob: ./features/filtered_taglengths.csv
   - id: "#softclip_taglen"
     type: File
     description: "CSV file with softclip taglenths"
     outputBinding:
-      glob:
-        engine: node-engine.cwl
-        script: |
-          {
-          return $job + "features/softclip_taglengths.csv";
-          }
+      glob: ./features/softclip_taglengths.csv"
   - id: "#chastity_taglen"
     type: File
     description: "CSV file with chastity taglenths"
     outputBinding:
-      glob:
-        engine: node-engine.cwl
-        script: |
-          {
-          return $job + "features/chastity_taglengths.csv";
-          }
+      glob: ./features/chastity_taglengths.csv
   - id: "#isoforms"
     type: File
     description: "miRNA isoforms"
     outputBinding:
-      glob:
-        engine: node-engine.cwl
-        script: |
-          {
-          return $job + "features/isoforms.txt";
-          }
+      glob: ./features/isoforms.txt
   - id: "#3_UTR"
     type: File
     description: "3 UTR feature"
     outputBinding:
-      glob:
-        engine: node-engine.cwl
-        script: |
-          {
-          return $job + "features/3_UTR.txt";
-          }
+      glob: ./features/3_UTR.txt
   - id: "#5_UTR"
     type: File
     description: "5 UTR feature"
     outputBinding:
-      glob:
-        engine: node-engine.cwl
-        script: |
-          {
-          return $job + "features/5_UTR.txt";
-          }
+      glob: ./features/5_UTR.txt
   - id: "#Coding_exon"
     type: File
     description: "Coding exon feature"
     outputBinding:
-      glob:
-        engine: node-engine.cwl
-        script: |
-          {
-          return $job + "features/Coding_Exon.txt";
-          }
+      glob: ./features/Coding_Exon.txt
   - id: "#Intron"
     type: File
     description: "Intron features"
     outputBinding:
-      glob:
-        engine: node-engine.cwl
-        script: |
-          {
-          return $job + "features/Intron.txt";
-          }
+      glob: ./features/Intron.txt
   - id: "mirna"
     type: File
     description: "TXT file with mirna information"
     outputBidning:
-      glob:
-        engine: node-engine.cwl
-        script: |
-          {
-          return $job + "features/miRNA.txt";
-          }
+      glob: ./features/miRNA.txt
   - id: "#snoRNA"
     type: File
     description: "TXT file with snoRNA information"
     outputBinding:
-      glob:
-        engine: node-engine.cwl
-        script: |
-          {
-          return $job + "features/snoRNA.txt";
-          }
+      glob: ./features/snoRNA.txt
+  - id: "#LINE"
+    type: File
+    description: "TXT file containing LINE features"
+    outputBinding:
+      glob: ./features/LINE.txt
+  - id: "#LTR"
+    type: File
+    description: "TXT file containing LTR features"
+    outputBinding:
+      glob: ./features/LTR.txt
+  - id: "#rmsk_DNA"
+    type: File
+    description: "TXT file containing RepeatMasker DNA features"
+    outputBinding:
+      glob: ./features/rmsk_DNA.txt
+  - id: "#rmsk_RNA
+    type: File
+    description: "TXT file containing RepeatMasker RNA features"
+    outputBinding:
+      glob: ./features/rmsk_RNA.txt
+  - id: "#rmsk_Simple_repeat"
+    type: File
+    description: "TXT file containing RepeatMasker simple repeat features"
+    outputBinding:
+      glob: ./features/rmsk_Simple_repeat.txt
+  - id: "#rRNA"
+    type: File
+    description: "TXT file containing rRNA features"
+    outputBinding:
+      glob: ./features/rRNA.txt
+  - id: "#Satellite"
+    type: File
+    description: "TXT file containing satellite features"
+    outputBinding:
+      glob: ./features/Satellite.txt
+  - id: "#scRNA"
+    type: File
+    description: "TXT file containing scRNA features"
+    outputBinding:
+      glob: ./features/scRNA.txt
+  - id: "#SINE"
+    type: File
+    description: "TXT file containing SINE features"
+    outputBinding:
+      glob: ./features/SINE.txt
+  - id: "#snRNA"
+    type: File
+    description: "TXT file containing snRNA features"
+    outputBinding:
+      glob: ./features/snRNA.txt
+  - id: "#srpRNA"
+    type: File
+    description: "TXT file containing srpRNA features"
+    outputBinding:
+      glob: ./features/srpRNA.txt
+  - id: "#tRNA"
+    type: File
+    description: "TXT file containing tRNA features"
+    outputBinding:
+      glob: ./features/tRNA.txt
   - id: "#bed_file"
     descripiton: "BED files for all chromosomes & strands"
     type:
       type: array
       items: File
-    glob: /job/feature/bed/*.txt.gz
+    outputBinding:
+      glob: /job/feature/bed/*.txt.gz
 
 baseCommand: ["python3", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_alignment_stats.py"]
