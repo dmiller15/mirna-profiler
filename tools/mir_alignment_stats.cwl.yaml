@@ -7,7 +7,7 @@ description: |
 
 requirements:
   - class: DockerRequirement
-    dockerPull: quay.io/dmiller15/mir_profiler
+    dockerPull: quay.io/dmiller15/mir-profiler
 
 class: CommandLineTool
 
@@ -46,7 +46,7 @@ outputs:
     type: File
     description: "CSV file with softclip taglenths"
     outputBinding:
-      glob: ./features/softclip_taglengths.csv"
+      glob: ./features/softclip*
   - id: "#chastity_taglen"
     type: File
     description: "CSV file with chastity taglenths"
@@ -80,7 +80,7 @@ outputs:
   - id: "mirna"
     type: File
     description: "TXT file with mirna information"
-    outputBidning:
+    outputBinding:
       glob: ./features/miRNA.txt
   - id: "#snoRNA"
     type: File
@@ -102,7 +102,7 @@ outputs:
     description: "TXT file containing RepeatMasker DNA features"
     outputBinding:
       glob: ./features/rmsk_DNA.txt
-  - id: "#rmsk_RNA
+  - id: "#rmsk_RNA"
     type: File
     description: "TXT file containing RepeatMasker RNA features"
     outputBinding:
@@ -148,11 +148,11 @@ outputs:
     outputBinding:
       glob: ./features/tRNA.txt
   - id: "#bed_file"
-    descripiton: "BED files for all chromosomes & strands"
+    description: "BED file{s} for all chromosomes and strands"
     type:
       type: array
       items: File
     outputBinding:
-      glob: /job/feature/bed/*.txt.gz
+      glob: ./feature/bed/*.txt.gz
 
 baseCommand: ["python3", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_alignment_stats.py"]
