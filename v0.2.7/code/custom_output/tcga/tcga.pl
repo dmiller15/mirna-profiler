@@ -30,7 +30,7 @@ my %mirnas; #hash storing output for quantitation by miRNA
 my %isoforms; #hash storing output for quantitation by isoform
 # my $dir = dirname($samplefile);
 my $samname = basename($sam_path);
-$samname =~ s/\..am$//;
+$samname =~ s/\..am.annot$//;
 
 #only print 1 warning if the whole set of files is missing
 warn "$mirna_path not found, please run library_stats/alignment_stats.pl to generate the file.\n" unless -e $mirna_path;

@@ -8,7 +8,7 @@ description: |
 
 requirements:
   - class: DockerRequirement
-    dockerPull: quay.io/dmiller15/mir_profiler
+    dockerPull: quay.io/dmiller15/mir-profiler
 
 inputs:
   - id: "#mirna_db"

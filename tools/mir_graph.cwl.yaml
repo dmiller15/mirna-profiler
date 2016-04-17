@@ -10,7 +10,7 @@ description: |
 
 requirements:
   - class: DockerRequirements
-    dockerPull: quay.io/dmiller15/mir_profiler
+    dockerPull: quay.io/dmiller15/mir-profiler
 
 inputs:
   - id: "#sam_path"
