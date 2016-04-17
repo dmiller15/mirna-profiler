@@ -11,8 +11,6 @@ description: |
     --crossmapped <crossmapped_path> --isoforms <isoforms_path> --connect_path <connect_path>
 
 requirements:
-  - import: node-engine.cwl
-  - import: envvar-global.cwl
   - class: DockerRequirement
     dockerPull: quay.io/dmiller15/mir_profiler
 
@@ -62,22 +60,12 @@ outputs:
     type: File
     description: "TCGA quantification of the isoform data"
     outputBinding:
-      glob:
-        engine: node-engine.cwl
-        script: |
-          {
-            return $job + "tcga/isoforms.quantification.txt"
-          }
+      glob: ./tcga/isoforms*
 
   - id: "#mirna_quant"
     type: File
     description: "TCGA quantification of the mirna data"
     outputBinding:
-      glob:
-        engine: node-engine.cwl
-        script: |
-          {
-            return $job + "tcga/mirnas.quantification.txt"
-          }
+      glob: ./tcga/mirnas*
 
 baseCommand: ["python3", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_tcga.py"]

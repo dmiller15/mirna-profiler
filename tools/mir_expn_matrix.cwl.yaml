@@ -7,8 +7,6 @@ description: |
          --mirna_path <mirna_path> --connect_path <connect_path>
 
 requirements:
-  - import: node-engine.cwl
-  - import: envvar-global.cwl
   - class: DockerRequirement
     dockerPull: quay.io/dmiller15/mir_profiler
 
@@ -43,33 +41,18 @@ outputs:
     type: file
     description: "matrix file"
     outputBinding:
-      glob:
-        engine: node-engine.cwl
-        script: |
-        {
-        return $job + "expn_matrix.txt"
-        }
+      glob: ./expn_matrix.txt
 
   - id: "#matrix_norm"
     type: file
     description: "matrix norm"
     outputBinding:
-      glob:
-        engine: node-engine.cwl
-        script: |
-        {
-        return $job + "expn_matrix_norm.txt"
-        }
+      glob: ./expn_matrix_norm.txt
 
   - id: "#matrix_norm_log"
     type: file
     descripiton: "matrix norm log"
     outputBinding:
-      glob:
-        engine: node-engine.cwl
-        script: |
-        {
-        return $job + "expn_matrix_norm_log.txt"
-        }
+      glob: ./expn_matrix_norm_log.txt
 
 baseCommand: ["python3", "home/ubuntu/bin/mirna-profiler/py-tools/mir_expn_matrix.py"]

@@ -166,6 +166,18 @@ steps:
       - id: "#mir_alignment_stats.mirna"
       - id: "#mir_alignment_stats.snoRNA"
       - id: "#mir_alignment_stats.bed_file"
+      - id: "#mir_alignment_stats.LINE"
+      - id: "#mir_alignment_stats.LTR"
+      - id: "#mir_alignment_stats.rmsk_DNA"
+      - id: "#mir_alignment_stats.rmsk_RNA"
+      - id: "#mir_alignment_stats.rmsk_Simple_repeat"
+      - id: "#mir_alignment_stats.rRNA"
+      - id: "#mir_alignment_stats.Satellite"
+      - id: "#mir_alignment_stats.scRNA"
+      - id: "#mir_alignment_stats.SINE"
+      - id: "#mir_alignment_stats.snRNA"
+      - id: "#mir_alignment_stats.srpRNA"
+      - id: "#mir_alignment_stats.tRNA"
 
   - id: "#mir_tcga"
     run: {import: ../tools/mir_tcga.cwl.yaml}

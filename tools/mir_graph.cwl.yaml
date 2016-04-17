@@ -74,4 +74,4 @@ outputs:
     outputBinding:
       glob: *_saturation.jpg
 
-baseCommand: ["python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_graph.py"]
+baseCommand: ["python3", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_graph.py"]
