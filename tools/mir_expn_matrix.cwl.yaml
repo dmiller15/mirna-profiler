@@ -3,8 +3,8 @@
 description: |
   Generates an miRNA expression matrix with pre-miRNA genes as rows and gets read counts from the mirna_species.txt files.
 
-  Usage: cwl-runner <this-file-path> --mirna_db <mirna_db> --species_code <species_code> --sam_path <sam_path> 
-         --mirna_path <mirna_path> --connect_path <connect_path>
+  Usage: cwl-runner <this-file-path> --species_code <species_code> --sam_path <sam_path> 
+         --mirna_path <mirna_path>
 
 requirements:
   - class: DockerRequirement
@@ -14,7 +14,7 @@ class: CommandLineTool
 
 inputs:
   - id: "#db_connect"
-    type: string
+    type: File 
     inputBinding:
       prefix: -d
       

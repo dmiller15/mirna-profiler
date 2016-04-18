@@ -10,8 +10,8 @@ description: >
   expression of only the highest priority feature.
 
   Usage: >
-    cwl-runner <this-file-path> --mirna_db <mirna_db> --ucsc_db <ucsc_db> 
-    --species_code <species_code> --sam_path <sam_path> --connect_path <conect_path>
+    cwl-runner <this-file-path> --db_connect <connect_path> --species_code <species_code> 
+    --sam_path <sam_path>
 
 requirements:
   - class: DockerRequirement
@@ -21,7 +21,7 @@ class: CommandLineTool
 
 inputs:
   - id: "#db_connect"
-    type: string
+    type: File 
     inputBinding:
       prefix: -c
 

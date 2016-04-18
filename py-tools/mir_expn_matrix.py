@@ -113,7 +113,6 @@ def main():
     # Required flags
     parser.add_argument('-c', '--db_connect',
                         required = True,
-                        choices = ['prod_bioinfo'],
                         help = 'Name of desired miRbase.',
     )
     parser.add_argument('-o', '--species_code',
@@ -154,7 +153,7 @@ def main():
 
     # Generate the expression matrices for pre-miRNA
     logger.info('Beginning: Pre-miRNA gene expression matrix generation')
-    matrix_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/library_stats/expression_matrix.pl', '-d', connect_path, '-o', species_code, '-s', species_code, '-r', mirna_species]
+    matrix_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/library_stats/expression_matrix.pl', '-d', connect_path, '-o', species_code, '-s', sam_path, '-r', mirna_species]
     do_command(matrix_CMD, logger)
     # Store time commmand will go here
     logger.info('Completed: Pre-miRNA gene expression matrix generation')

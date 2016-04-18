@@ -6,9 +6,9 @@ description: |
   Needs miRBase access.
 
   Usage: >
-    cwl-runner <this-file-path> --mirna_db <mirna_db> --species_code <species_code> 
-    --ucsc_db <ucsc_db> --sam_path <sam_path> --mirna_species <mirna_species_path> 
-    --crossmapped <crossmapped_path> --isoforms <isoforms_path> --connect_path <connect_path>
+    cwl-runner <this-file-path> --db_connect <connect_path>  --species_code <species_code> 
+    --sam_path <sam_path> --mirna_species <mirna_species_path> --crossmapped <crossmapped_path> 
+    --isoforms <isoforms_path>
 
 requirements:
   - class: DockerRequirement
@@ -18,7 +18,7 @@ class: CommandLineTool
 
 inputs:
   - id: "#db_connect"
-    type: string
+    type: File 
     inputBinding:
       prefix: -c
       
