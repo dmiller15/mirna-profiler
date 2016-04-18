@@ -12,7 +12,7 @@ getopts("d:o:g:s:r:c:i:");
 
 #finds .sam or .bam files under project directory and uses files created by library_stats/alignment_stats.pl to generate data files in the format required for TCGA
 
-my $usage = "$0 -m db_config -o species_code -g genome_version -s sam_path -r mirna_species_path -c crossmapped_path -i isoforms_path\n";
+my $usage = "$0 -d db_config -o species_code -g genome_version -s sam_path -r mirna_species_path -c crossmapped_path -i isoforms_path\n";
 die "$usage" unless $opt_d && $opt_o && $opt_g && $opt_s && $opt_r && $opt_c && $opt_i;
 
 my $sam_path = $opt_s;

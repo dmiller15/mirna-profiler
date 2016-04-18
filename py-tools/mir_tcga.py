@@ -117,7 +117,7 @@ def main():
     )
     parser.add_argument('-g', '--genome_version',
                         required = True,
-                        choices = ['hg_38'],
+                        choices = ['hg38'],
                         help = 'Genome Version of Annotation.',
     )
     parser.add_argument('-o', '--species_code',
