@@ -141,7 +141,7 @@ sub read_mirbase {
 
 sub get_db {
     my $dbname = shift;
-    my $dir = getcwd(); 
+    my $dir = getcwd; 
     my $db_connections = "$dir/db_connections.cfg";
     open DB, $db_connections or die "Could not find database connections file $db_connections";
     my @connections = <DB>;
