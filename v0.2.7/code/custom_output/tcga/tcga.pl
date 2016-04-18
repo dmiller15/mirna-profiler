@@ -119,7 +119,7 @@ sub read_mirbase {
     #returns an array of miRNA gene names
     my $db_config = shift;
     my $species = shift;
-    my ($dbname, $dbhost, $dbuser, $dbpass) = get_db($db);
+    my ($dbname, $dbhost, $dbuser, $dbpass) = get_db($db_config);
     my $dbh_mirbase = DBI->connect("DBI:Pg:database=$dbname;host=$dbhost", $dbuser, $dbpass, {AutoCommit => 0, PrintError => 1}) || die "Could not connect to database: $DBI::errstr";
     
     #get mirbase species code from organism code

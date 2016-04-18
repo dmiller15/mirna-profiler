@@ -1,7 +1,7 @@
 FROM ubuntu:14.04
 MAINTAINER Daniel Miller <dmiller15@uchicago.edu>
 
-ENV mirna-profiler 0.31
+ENV mirna-profiler 0.32
 
 USER root
 ENV DEBIAN_FRONTEND=noninteractive

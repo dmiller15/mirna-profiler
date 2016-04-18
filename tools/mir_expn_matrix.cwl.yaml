@@ -16,7 +16,7 @@ inputs:
   - id: "#db_connect"
     type: File 
     inputBinding:
-      prefix: -d
+      prefix: -c
       
   - id: "#species_code"
     type: string

@@ -113,7 +113,6 @@ def main():
     # Required flags
     parser.add_argument('-c', '--db_connect',
                         required = True,
-                        choices = ['prod_bioinfo'],
                         help = 'Name of desired miRbase.',
     )
     parser.add_argument('-o', '--species_code',
