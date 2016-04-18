@@ -10,6 +10,8 @@ requirements:
   - class: DockerRequirement
     dockerPull: quay.io/dmiller15/mir-profiler
 
+class: CommandLineTool
+
 inputs:
   - id: "#mirna_db"
     type: string
@@ -43,20 +45,20 @@ inputs:
 
 outputs:
   - id: "#mimat"
-     type: File
+    type: File
     description: "mimat file"
     outputBinding:
       glob: expn_matrix_mimat.txt
 
   - id: "#mimat_norm"
-     type: File
+    type: File
     description: "mimat norm"
     outputBinding:
       glob: expn_matrix_mimat_norm.txt
 
   - id: "#mimat_norm_log"
-     type: File
-    descripiton: "mimat norm log"
+    type: File
+    description: "mimat norm log"
     outputBinding:
       glob: expn_matrix_mimat_norm_log.txt
 

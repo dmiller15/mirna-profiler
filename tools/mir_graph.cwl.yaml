@@ -9,8 +9,10 @@ description: |
          --connect_path <connect_path>
 
 requirements:
-  - class: DockerRequirements
+  - class: DockerRequirement
     dockerPull: quay.io/dmiller15/mir-profiler
+
+class: CommandLineTool
 
 inputs:
   - id: "#sam_path"
@@ -52,26 +54,26 @@ outputs:
   - id: "#tags_graph"
     type: File
     outputBinding:
-      glob: *_tags.jpg
+      glob: ./*_tags.jpg
 
   - id: "#softclip_graph"
     type: File
     outputBinding:
-      glob: *_softclip.jpg
+      glob: ./*_softclip.jpg
 
   - id: "#adapter_graph"
     type: File
     outputBinding:
-      glob: *_NA.jpg
+      glob: ./*_NA.jpg
 
   - id: "#chastity_graph"
     type: File
     outputBinding:
-      glob: *_chastity.jpg
+      glob: ./*_chastity.jpg
 
   - id: "saturation_graph"
     type: File
     outputBinding:
-      glob: *_saturation.jpg
+      glob: ./*_saturation.jpg
 
 baseCommand: ["python3", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_graph.py"]

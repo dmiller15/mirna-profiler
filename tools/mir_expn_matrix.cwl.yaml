@@ -10,6 +10,8 @@ requirements:
   - class: DockerRequirement
     dockerPull: quay.io/dmiller15/mir-profiler
 
+class: CommandLineTool
+
 inputs:
   - id: "#mirna_db"
     type: string
@@ -22,36 +24,36 @@ inputs:
       prefix: -o
       
   - id: "#sam_path"
-    type: file
+    type: File 
     inputBinding:
       prefix: -s
 
   - id: "#mirna_path"
-    type: file
+    type: File
     inputBinding:
       prefix: -r
 
   - id: "#connect_path"
-    type: file
+    type: File
     inputBinding:
       prefix: -x
 
 outputs:
   - id: "#matrix"
-    type: file
+    type: File
     description: "matrix file"
     outputBinding:
       glob: ./expn_matrix.txt
 
   - id: "#matrix_norm"
-    type: file
+    type: File
     description: "matrix norm"
     outputBinding:
       glob: ./expn_matrix_norm.txt
 
   - id: "#matrix_norm_log"
-    type: file
-    descripiton: "matrix norm log"
+    type: File
+    description: "matrix norm log"
     outputBinding:
       glob: ./expn_matrix_norm_log.txt
 
