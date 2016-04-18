@@ -38,7 +38,7 @@ inputs:
   - id: "#chastity_taglen"
     type: File
     inputBinding:
-      prefix: -h
+      prefix: -c
 
   - id: "#alignment_stats"
     type: File

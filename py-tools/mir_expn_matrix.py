@@ -139,7 +139,7 @@ def main():
     species_code = args.species_code
     sam_path = args.sam_path
     mirna_path = args.mirna_path
-    connect_path = agrs.db_connect
+    connect_path = args.db_connect
 
     # Logging Setup
     logging.basicConfig(

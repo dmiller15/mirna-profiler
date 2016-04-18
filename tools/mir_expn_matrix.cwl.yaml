@@ -57,4 +57,4 @@ outputs:
     outputBinding:
       glob: ./expn_matrix_norm_log.txt
 
-baseCommand: ["python3", "home/ubuntu/bin/mirna-profiler/py-tools/mir_expn_matrix.py"]
+baseCommand: ["python3", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_expn_matrix.py"]

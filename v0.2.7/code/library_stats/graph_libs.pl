@@ -26,7 +26,7 @@ my $sam_path = $opt_s;
 my $dir = dirname(__FILE__); #R scripts are in the same directory as this script
 
 my $filename = basename($sam_path);
-$filename =~ s/\.[bs]am$//;
+$filename =~ s/\.[bs]am.annot$//;
 my ($lib, $index) = split('_', $filename);
 $index = '' unless defined $index;
 
