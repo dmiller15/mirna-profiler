@@ -17,12 +17,12 @@ requirements:
 class: CommandLineTool
 
 inputs:
-  - id: "#mirna_db"
+  - id: "#db_connect"
     type: string
     inputBinding:
-      prefix: -m
+      prefix: -c
       
-  - id: "#ucsc_db"
+  - id: "#genome_version"
     type: string
     inputBinding:
       prefix: -g
@@ -45,17 +45,12 @@ inputs:
   - id: "#crossmapped"
     type: File
     inputBinding:
-      prefix: -c
+      prefix: -x
 
   - id: "#isoforms"
     type: File
     inputBinding:
       prefix: -i
-
-  - id: "#connect_path"
-    type: File
-    inputBinding:
-      prefix: -x
 
 outputs:
   - id: "#isoform_quant"

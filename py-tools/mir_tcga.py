@@ -111,15 +111,14 @@ def main():
     parser.set_defaults(level = logging.INFO)
 
     # Required flags
-    parser.add_argument('-m', '--mirna_db',
+    parser.add_argument('-c', '--db_connect',
                         required = True,
-                        choices = ['prod_bioinfo'],
                         help = 'Name of desired miRbase.',
     )
-    parser.add_argument('-g', '--ucsc_db',
+    parser.add_argument('-g', '--genome_version',
                         required = True,
-                        choices = ['prod_bioinfo'],
-                        help = 'Name of desired UCSC database.',
+                        choices = ['hg_38'],
+                        help = 'Genome Version of Annotation.',
     )
     parser.add_argument('-o', '--species_code',
                         required = True,
@@ -134,7 +133,7 @@ def main():
                         required = True,
                         help = 'Path to mirna_species.txt',
     )
-    parser.add_argument('-c', '--crossmapped',
+    parser.add_argument('-x', '--crossmapped',
                         required = True,
                         help = 'Path to crossmapped.txt',
     )
@@ -142,20 +141,15 @@ def main():
                         required = True,
                         help = 'Path to isoforms.txt',
     )
-    parser.add_argument('-x', '--db_connect',                  
-                        required = True,
-                        help = 'Path to db_connection file',                  
-    )
     args = parser.parse_args()
 
-    mirna_db = args.mirna_db
-    ucsc_db = args.ucsc_db
+    connect_path = args.db_connect
+    genome_version = args.genome_version
     species_code = args.species_code
     sam_path = args.sam_path
     mirna_species = args.mirna_species
     crossmapped = args.crossmapped
     isoforms = args.isoforms
-    connect_path = args.db_connect    
 
     # Logging Setup
     logging.basicConfig(
@@ -175,7 +169,7 @@ def main():
 
     # Generate TCGA formatted results
     logger.info('Beginning: TCGA formatted results generation')
-    tcga_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/custom_output/tcga/tcga.pl', '-m', mirna_db, '-o', species_code, '-g', ucsc_db, '-s', sam_path, '-r', mirna_species, '-c', crossmapped, '-i', isoforms]
+    tcga_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/custom_output/tcga/tcga.pl', '-d', connect_path, '-o', species_code, '-g', genome_version, '-s', sam_path, '-r', mirna_species, '-c', crossmapped, '-i', isoforms]
     do_command(tcga_CMD, logger)
     # Store time command will go here
     logger.info('Completed: TCGA formatted results generation')

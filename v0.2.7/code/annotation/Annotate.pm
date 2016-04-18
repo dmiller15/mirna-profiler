@@ -185,8 +185,7 @@ sub build_reference_hashes {
 	#mirbase, UCSC knownGene, UCSC rmsk
 	#based on algorithm from overlapcoordinates_fast by Richard Corbett
 
-	my $mirbase = shift;
-	my $ucsc_db = shift;
+	my $db_config = shift;
 	my $species_code = shift;
 	my $sample_file = shift; #a sample file in set of files to annotate, to find the labelling formats used
 
@@ -200,7 +199,7 @@ sub build_reference_hashes {
 		$mirna_mature_co, $mirna_mature_idx,
 		$mirna_star_co, $mirna_star_idx,
 		$mirna_stem_co, $mirna_stem_idx,
-		$mirna_pre_co, $mirna_pre_idx) = mirbase_hashes($mirbase, $species_code, $chr_format, $mt_format);
+		$mirna_pre_co, $mirna_pre_idx) = mirbase_hashes($db_config, $species_code, $chr_format, $mt_format);
 	print STDERR "Done\n" ;
 
 	print STDERR "\tUCSC...\n";
@@ -224,13 +223,13 @@ sub build_reference_hashes {
 		$rmsk_simple_repeat_co, $rmsk_simple_repeat_idx,
 		$rmsk_dna_co, $rmsk_dna_idx,
 		$rmsk_other_co, $rmsk_other_idx,
-		$rmsk_unknown_co, $rmsk_unknown_idx) = ucsc_hashes($ucsc_db, $chr_format, $mt_format);
+		$rmsk_unknown_co, $rmsk_unknown_idx) = ucsc_hashes($db_config, $chr_format, $mt_format);
 	print STDERR "\tDone\nDone\n";
 }
 
 sub mirbase_hashes {
-	my ($mirbase, $species, $chr_format, $mt_format) = @_;
-	my ($dbname, $dbhost, $dbuser, $dbpass) = get_db($mirbase);
+	my ($db_config, $species, $chr_format, $mt_format) = @_;
+	my ($dbname, $dbhost, $dbuser, $dbpass) = get_db($db_config);
 	my $dbh_mirbase = DBI->connect("DBI:Pg:database=$dbname;host=$dbhost", $dbuser, $dbpass, {AutoCommit => 0, PrintError => 1}) || die "Could not connect to database: $DBI::errstr";
 
 	#get mirbase species code from organism code
@@ -320,8 +319,8 @@ sub mirbase_hashes {
 }
 
 sub ucsc_hashes {
-	my ($ucsc_db, $chr_format, $mt_format) = @_;
-	my ($dbname, $dbhost, $dbuser, $dbpass) = get_db($ucsc_db);
+	my ($db_config, $chr_format, $mt_format) = @_;
+	my ($dbname, $dbhost, $dbuser, $dbpass) = get_db($db_config);
 	my $dbh_ucsc = DBI->connect("DBI:Pg:database=$dbname;host=$dbhost", $dbuser, $dbpass, {AutoCommit => 1, PrintError => 1}) || die "Could not connect to database: $DBI::errstr"; #autocommit set to try to allow auto_reconnect
 	
 	my (%gene_co, %gene_idx,
@@ -685,9 +684,8 @@ sub format_ucsc {
 }
 
 sub get_db {
-	my $dbname = shift;
-	my $dir = getcwd; 
-	my $db_connections = "$dir/db_connections.cfg";
+	my $dbname = "prod_bioinfo";
+	my $db_connections = shift;
 	open DB, $db_connections or die "Could not find database connections file $db_connections";
 	my @connections = <DB>;
 	close DB;

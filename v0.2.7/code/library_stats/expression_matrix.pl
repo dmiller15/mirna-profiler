@@ -1,8 +1,8 @@
 #!/usr/bin/env perl
 use strict; 
 use Getopt::Std; 
-use vars qw ($opt_m $opt_o $opt_h $opt_s $opt_r);
-getopts('m:o:h:s:r:');
+use vars qw ($opt_d $opt_o $opt_h $opt_s $opt_r);
+getopts('d:o:h:s:r:');
 use DBI;
 use Cwd;
 use File::Find;
@@ -23,12 +23,12 @@ expn_matrix.txt: matrix with raw read counts
 expn_matrix_norm.txt: matrix with normalized counts (counts per million miRNA aligned tags)
 expn_matrix_norm_log.txt: as above, but values are taken to log2
 
-Usage: $0 -m mirbase_db -o species_code -s sam_path -r mirna_path
+Usage: $0 -d db_config -o species_code -s sam_path -r mirna_species
 
 ########################################################
 ";
 
-if ($opt_h || !($opt_m && $opt_o && $opt_s && $opt_r)) { print $help_text; exit 1; }
+if ($opt_h || !($opt_d && $opt_o && $opt_s && $opt_r)) { print $help_text; exit 1; }
 
 #Data structure
 my %genes; #hash gene->sample->value
@@ -41,10 +41,10 @@ my $norm_factor = 1000000; #Normalize to this number of tags
 my $mirna_path = $opt_r;
 my $sam_path = $opt_s;
 my $sample = basename($sam_path);
-$sample =~ s/\.sam//;
+$sample =~ s/\.sam.annot//;
 
 #Read in gene list
-@genes = get_mirna_genes($opt_m, $opt_o);
+@genes = get_mirna_genes($opt_d, $opt_o);
 
 push (@sample_names, $sample);
 
@@ -107,9 +107,9 @@ close NORM;
 close LOG;
 	
 sub get_mirna_genes {
-    my $db = shift;
+    my $db_config = shift;
     my $species = shift;
-    my ($dbname, $dbhost, $dbuser, $dbpass) = get_db($db);
+    my ($dbname, $dbhost, $dbuser, $dbpass) = get_db($db_config);
     my $dbh_mirbase = DBI->connect("DBI:Pg:database=$dbname;host=$dbhost", $dbuser, $dbpass, {AutoCommit => 0, PrintError => 1}) || die "Could not connect to database: $DBI::errstr";
     #get mirbase species code from organism code
     my $species_code = $dbh_mirbase->selectrow_array("SELECT auto_id FROM mirna_species WHERE organism = '$species'");
@@ -129,9 +129,8 @@ sub get_mirna_genes {
 }
 
 sub get_db {
-    my $dbname = shift;
-    my $dir = getcwd; 
-    my $db_connections = "$dir/db_connections.cfg";
+    my $dbname = "prod_bioinfo"; 
+    my $db_connections = shift;
     open DB, $db_connections or die "Could not find database connections file $db_connections";
     my @connections = <DB>;
     close DB;

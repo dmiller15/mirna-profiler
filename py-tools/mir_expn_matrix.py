@@ -111,7 +111,7 @@ def main():
     parser.set_defaults(level = logging.INFO)
 
     # Required flags
-    parser.add_argument('-m', '--mirna_db',
+    parser.add_argument('-c', '--db_connect',
                         required = True,
                         choices = ['prod_bioinfo'],
                         help = 'Name of desired miRbase.',
@@ -125,21 +125,16 @@ def main():
                         required = True,
                         help = 'Path to SAM file',
     )
-    parser.add_argument('-r', '--mirna_path',
+    parser.add_argument('-r', '--mirna_species',
                         required = True,
                         help = 'Path to mirna_species file',
-    )
-    parser.add_argument('-x', '--db_connect',
-                        required = True,
-                        help = 'Path to db_connection file',
-    )                    
+    )                  
     args = parser.parse_args()                   
 
-    mirna_db = args.mirna_db
+    connect_path = args.db_connect
     species_code = args.species_code
     sam_path = args.sam_path
-    mirna_path = args.mirna_path
-    connect_path = args.db_connect
+    mirna_species = args.mirna_species
 
     # Logging Setup
     logging.basicConfig(
@@ -159,7 +154,7 @@ def main():
 
     # Generate the expression matrices for pre-miRNA
     logger.info('Beginning: Pre-miRNA gene expression matrix generation')
-    matrix_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/library_stats/expression_matrix.pl', '-m', mirna_db, '-o', species_code, '-s', species_code, '-r', mirna_path]
+    matrix_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/library_stats/expression_matrix.pl', '-d', connect_path, '-o', species_code, '-s', species_code, '-r', mirna_species]
     do_command(matrix_CMD, logger)
     # Store time commmand will go here
     logger.info('Completed: Pre-miRNA gene expression matrix generation')

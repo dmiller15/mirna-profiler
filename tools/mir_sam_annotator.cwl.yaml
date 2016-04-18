@@ -20,15 +20,10 @@ requirements:
 class: CommandLineTool
 
 inputs:
-  - id: "#mirna_db"
+  - id: "#db_connect"
     type: string
     inputBinding:
-      prefix: -m
-
-  - id: "#ucsc_db"
-    type: string
-    inputBinding:
-      prefix: -u
+      prefix: -c
 
   - id: "#species_code"
     type: string
@@ -39,11 +34,6 @@ inputs:
     type: File
     inputBinding:
       prefix: -s
-
-  - id: "#connect_path"
-    type: File
-    inputBinding:
-      prefix: -x
 
 outputs:
   - id: "#annot_sam"

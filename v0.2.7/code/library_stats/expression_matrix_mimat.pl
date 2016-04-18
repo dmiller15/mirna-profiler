@@ -1,8 +1,8 @@
 #!/usr/bin/env perl
 use strict; 
 use Getopt::Std; 
-use vars qw ($opt_m $opt_o $opt_h $opt_s $opt_r $opt_c);
-getopts('m:o:h:s:r:c:');
+use vars qw ($opt_d $opt_o $opt_h $opt_s $opt_r $opt_c);
+getopts('d:o:h:s:r:c:');
 use DBI;
 use Cwd;
 use File::Find;
@@ -19,12 +19,12 @@ expn_matrix_mimat.txt: matrix with raw read counts
 expn_matrix_mimat_norm.txt: matrix with normalized counts (counts per million mature miRNA aligned tags)
 expn_matrix_mimat_norm_log.txt: as above, but values are taken to log2
 
-Usage: $0 -m mirbase_db -o species_code -s sam_path -r miRNA_path -c crossmapped_path
+Usage: $0 -d db_config -o species_code -s sam_path -r miRNA_path -c crossmapped_path
 
 ########################################################
 ";
 
-if ($opt_h || !($opt_m && $opt_o && $opt_s && $opt_r && $opt_c)) { print $help_text; exit 1; }
+if ($opt_h || !($opt_d && $opt_o && $opt_s && $opt_r && $opt_c)) { print $help_text; exit 1; }
 
 #Data structure
 my %genes; #hash gene->sample->value
@@ -45,14 +45,14 @@ push(@mirnafiles, $cross_path);
 my $sam_path = $opt_s;
 
 #Read in gene list
-my ($genes, $mimats) = get_mirna_genes($opt_m, $opt_o);
+my ($genes, $mimats) = get_mirna_genes($opt_d, $opt_o);
 @genes = @$genes;
 %mimats = %$mimats;
 
 #Read in mirna expression
 foreach my $source (@mirnafiles) {
     my $sample = basename($sam_path);
-    $sample = s/\.sam//;
+    $sample = s/\.sam.annot//;
     $sample_names{$sample} = 1;
     
     my $sample_total = 0; #Total tag count for sample based on expr file
@@ -121,9 +121,9 @@ close NORM;
 close LOG;
 	
 sub get_mirna_genes {
-    my $db = shift;
+    my $db_config = shift;
     my $species = shift;
-    my ($dbname, $dbhost, $dbuser, $dbpass) = get_db($db);
+    my ($dbname, $dbhost, $dbuser, $dbpass) = get_db($db_config);
     my $dbh_mirbase = DBI->connect("DBI:Pg:database=$dbname;host=$dbhost", $dbuser, $dbpass, {AutoCommit => 0, PrintError => 1}) || die "Could not connect to database: $DBI::errstr";
     #get mirbase species code from organism code
     my $species_code = $dbh_mirbase->selectrow_array("SELECT auto_id FROM mirna_species WHERE organism = '$species'");
@@ -180,9 +180,8 @@ sub trim_id {
 }
 
 sub get_db {
-    my $dbname = shift;
-    my $dir = getcwd; 
-    my $db_connections = "$dir/db_connections.cfg";
+    my $dbname = "prod_bioinfo";
+    my $db_connections = shift;
     open DB, $db_connections or die "Could not find database connections file $db_connections";
     my @connections = <DB>;
     close DB;

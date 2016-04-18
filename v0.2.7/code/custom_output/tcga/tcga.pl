@@ -7,13 +7,13 @@ use File::Basename;
 use DBI;
 use Cwd;
 
-use vars qw($opt_m $opt_o $opt_g $opt_s $opt_r $opt_c $opt_i);
-getopts("m:o:g:s:r:c:i:");
+use vars qw($opt_d $opt_o $opt_g $opt_s $opt_r $opt_c $opt_i);
+getopts("d:o:g:s:r:c:i:");
 
 #finds .sam or .bam files under project directory and uses files created by library_stats/alignment_stats.pl to generate data files in the format required for TCGA
 
-my $usage = "$0 -m mirbase_db -o species_code -g genome_version -s sam_path -r mirna_species_path -c crossmapped_path -i isoforms_path\n";
-die "$usage" unless $opt_m && $opt_o && $opt_g && $opt_s && $opt_r && $opt_c && $opt_i;
+my $usage = "$0 -m db_config -o species_code -g genome_version -s sam_path -r mirna_species_path -c crossmapped_path -i isoforms_path\n";
+die "$usage" unless $opt_d && $opt_o && $opt_g && $opt_s && $opt_r && $opt_c && $opt_i;
 
 my $sam_path = $opt_s;
 my $mirna_path = $opt_r;
@@ -21,7 +21,7 @@ my $cross_path = $opt_c;
 my $isoform_path = $opt_i;
 
 #Read in gene list
-my @genes = read_mirbase($opt_m, $opt_o);
+my @genes = read_mirbase($opt_d, $opt_o);
 my $NORM_FACTOR = 1000000; #normalize to this many miRNA reads in library
 
 # Only dealing with one SAM now; no more for loop
@@ -117,7 +117,7 @@ sub sort_coord_str {
 
 sub read_mirbase {
     #returns an array of miRNA gene names
-    my $db = shift;
+    my $db_config = shift;
     my $species = shift;
     my ($dbname, $dbhost, $dbuser, $dbpass) = get_db($db);
     my $dbh_mirbase = DBI->connect("DBI:Pg:database=$dbname;host=$dbhost", $dbuser, $dbpass, {AutoCommit => 0, PrintError => 1}) || die "Could not connect to database: $DBI::errstr";
@@ -140,9 +140,8 @@ sub read_mirbase {
 }
 
 sub get_db {
-    my $dbname = shift;
-    my $dir = getcwd; 
-    my $db_connections = "$dir/db_connections.cfg";
+    my $dbname = "prod_bioinfo";
+    my $db_connections = shift;
     open DB, $db_connections or die "Could not find database connections file $db_connections";
     my @connections = <DB>;
     close DB;

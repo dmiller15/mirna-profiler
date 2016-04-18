@@ -9,10 +9,7 @@ inputs:
   - id: "#sam_name"
     type: string
 
-  - id: "#mirna_db"
-    type: string
-
-  - id: "#ucsc_db"
+  - id: "#genome_version"
     type: string
 
   - id: "#species_code"
@@ -169,14 +166,10 @@ steps:
     inputs:
       - id: "#mir_sam_annotator.sam_path"
         source: "#samtools.sam_file"
-      - id: "#mir_sam_annotator.mirna_db"
-        source: "#mirna_db"
-      - id: "#mir_sam_annotator.ucsc_db"
-        source: "#ucsc_db"
+      - id: "#mir_sam_annotator.db_connect"
+        source: "#connect_path"
       - id: "#mir_sam_annotator.species_code"
         source: "#species_code" 
-      - id: "#mir_sam_annotator.connect_path"
-        source: "#connect_path"
     outputs:
       - id: "#mir_sam_annotator.annot_sam"
   
@@ -218,10 +211,10 @@ steps:
   - id: "#mir_tcga"
     run: {import: ../tools/mir_tcga.cwl.yaml}
     inputs:
-      - id: "#mir_tcga.mirna_db"
-        source: "#mirna_db"
-      - id: "#mir_tcga.ucsc_db"
-        source: "#ucsc_db"
+      - id: "#mir_tcga.db_connect"
+        source: "#connect_path"
+      - id: "#mir_tcga.genome_version"
+        source: "#genome_version"
       - id: "#mir_tcga.species_code"
         source: "#species_code"
       - id: "#mir_tcga.sam_path"
@@ -232,8 +225,6 @@ steps:
         source: "#mir_alignment_stats.crossmapped"
       - id: "#mir_tcga.isoforms"
         source: "#mir_alignment_stats.isoforms"
-      - id: "#mir_tcga.connect_path"
-        source: "#connect_path"
     outputs:
       - id: "#mir_tcga.isoform_quant"
       - id: "#mir_tcga.mirna_quant"
@@ -241,16 +232,14 @@ steps:
   - id: "#mir_expn_matrix"
     run: {import: ../tools/mir_expn_matrix.cwl.yaml}
     inputs:
-      - id: "#mir_expn_matrix.mirna_db"
-        source: "#mirna_db"
+      - id: "#mir_expn_matrix.db_connect"
+        source: "#connect_path"
       - id: "#mir_expn_matrix.species_code"
         source: "#species_code"
       - id: "#mir_expn_matrix.sam_path"
         source: "#mir_sam_annotator.annot_sam"
-      - id: "#mir_expn_matrix.mirna_path"
+      - id: "#mir_expn_matrix.mirna_species"
         source: "#mir_alignment_stats.mirna_species"
-      - id: "#mir_expn_matrix.connect_path"
-        source: "#connect_path"
     outputs:
       - id: "#mir_expn_matrix.matrix"
       - id: "#mir_expn_matrix.matrix_norm"
@@ -259,8 +248,8 @@ steps:
   - id: "#mir_expn_mimat"
     run: {import: ../tools/mir_expn_mimat.cwl.yaml}
     inputs:
-      - id: "#mir_expn_mimat.mirna_db"
-        source: "#mirna_db"
+      - id: "#mir_expn_mimat.db_connect"
+        source: "#connect_path"
       - id: "#mir_expn_mimat.species_code"
         source: "#species_code"
       - id: "#mir_expn_mimat.sam_path"
@@ -269,8 +258,6 @@ steps:
         source: "#mir_alignment_stats.mirna"
       - id: "#mir_expn_mimat.crossmapped_path"
         source: "#mir_alignment_stats.crossmapped"
-      - id: "#mir_expn_mimat.connect_path"
-        source: "#connect_path"
     outputs:
       - id: "#mir_expn_mimat.mimat"
       - id: "#mir_expn_mimat.mimat_norm"
@@ -291,8 +278,6 @@ steps:
         source: "#mir_alignment_stats.chastity_taglen"
       - id: "#mir_graph.alignment_stats"
         source: "#mir_alignment_stats.alignment_stats"
-      - id: "#mir_graph.connect_path"
-        source: "#connect_path"
     outputs:
       - id: "#mir_graph.tags_graph"
       - id: "#mir_graph.softclip_graph"

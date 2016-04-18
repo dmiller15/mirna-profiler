@@ -135,10 +135,6 @@ def main():
                         required = True,
                         help = 'Path to alignment_stats.csv',
     )
-    parser.add_argument('-x', '--db_connect',                  
-                        required = True,
-                        help = 'Path to db_connection file',                  
-    )
     args = parser.parse_args()                   
 
     sam_path = args.sam_path
@@ -147,7 +143,6 @@ def main():
     adapter_taglen = args.adapter_taglen
     chastity_taglen = args.chastity_taglen
     alignment_stats = args.alignment_stats
-    connect_path = args.db_connect
     
     # Logging Setup
     logging.basicConfig(

@@ -8,15 +8,15 @@ use File::Copy;
 use lib dirname(__FILE__);
 use Annotate;
 
-use vars qw($opt_m $opt_o $opt_u $opt_s);
-getopts("m:o:u:s:");
+use vars qw($opt_d $opt_o $opt_s);
+getopts("d:o:s:");
 
 #takes same file and annotates it
 #if annotations already exists, they're overwritten
 
 # No longer takes a project directory; now takes absolute path for sam
-my $usage = "$0 -m mirbase -u ucsc_database -o species_code -s sam_path\n";
-die "$usage" unless $opt_m && $opt_o && $opt_u && $opt_s;
+my $usage = "$0 -d db_config -o species_code -s sam_path\n";
+die "$usage" unless $opt_d && $opt_o && $opt_s;
 
 my $sam_path = $opt_s;
 # No longer seaerching for sam files
@@ -26,7 +26,7 @@ my $input_sam = basename($sam_path);
 my $samname = "$input_sam.annot";
 
 # build coordinate and index hashes out of reference data for overlapcoordinates
-build_reference_hashes($opt_m, $opt_u, $opt_o, $sam_path);
+build_reference_hashes($opt_d, $opt_o, $sam_path);
 
 # We only have 1 sam file now so no more for loop
 print STDERR "Starting overlaps for $sam_path...";

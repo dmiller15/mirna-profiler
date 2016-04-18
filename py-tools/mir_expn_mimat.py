@@ -99,7 +99,7 @@ def store_time(uuid, cmd, output, logger):
     return df
 
 def main():
-    parser = argparse.ArgumentParser('miRNA matrix mimat developmentt', description = 'Mature miRNA gene expression matrix genreation',)
+    parser = argparse.ArgumentParser('miRNA matrix mimat development', description = 'Mature miRNA gene expression matrix genreation',)
 
     # Logging flag
     parser.add_argument('-d', '--debug',
@@ -111,7 +111,7 @@ def main():
     parser.set_defaults(level = logging.INFO)
 
     # Required flags
-    parser.add_argument('-m', '--mirna_db',
+    parser.add_argument('-c', '--db_connect',
                         required = True,
                         choices = ['prod_bioinfo'],
                         help = 'Name of desired miRbase.',
@@ -129,22 +129,18 @@ def main():
                         required = True,
                         help = 'Path to miRNA.txt file',
     )
-    parser.add_argument('-c', '--crossmapped',
+    parser.add_argument('-x', '--crossmapped_path',
                         required = True,
                         help = 'Path to crossmapped.txt file',
     )
-    parser.add_argument('-x', '--db_connect',                  
-                        required = True,
-                        help = 'Path to db_connection file',                  
-    )
+
     args = parser.parse_args()
 
-    mirna_db = args.mirna_db
+    db_connect = args.db_connect
     species_code = args.species_code
     sam_path = args.sam_path
     mirna_path = args.mirna_path
-    crossmapped = args.crossmapped
-    connect_path = args.db_connect
+    crossmapped_path = args.crossmapped_path
     
     # Logging Setup
     logging.basicConfig(
@@ -164,7 +160,7 @@ def main():
 
     # Get stats from the alignment annotations
     logger.info('Beginning: Mature miRNA gene expression matrix genreation')
-    mimat_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/library_stats/expression_matrix_mimat.pl', '-m', mirna_db, '-o', species_code, '-s', sam_path, '-r', mirna_path, '-c', crossmapped]
+    mimat_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/library_stats/expression_matrix_mimat.pl', '-d', db_connect, '-o', species_code, '-s', sam_path, '-r', mirna_path, '-c', crossmapped_path]
     do_command(mimat_CMD, logger)
     # Store time command will go here
     logger.info('Completed: Mature miRNA gene expression matrix genreation')

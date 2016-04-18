@@ -45,11 +45,6 @@ inputs:
     inputBinding:
       prefix: -t
 
-  - id: "#connect_path"
-    type: File
-    inputBinding:
-      prefix: -x
-
 outputs:
   - id: "#tags_graph"
     type: File

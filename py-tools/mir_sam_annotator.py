@@ -111,16 +111,6 @@ def main():
     parser.set_defaults(level = logging.INFO)
 
     # Required flags
-    parser.add_argument('-m', '--mirna_db',
-                        required = True,
-                        choices = ['prod_bioinfo'],
-                        help = 'Name of desired miRbase.',
-    )
-    parser.add_argument('-u', '--ucsc_db',
-                        required = True,
-                        choices = ['prod_bioinfo'],
-                        help = 'Name of desired UCSC database.',
-    )
     parser.add_argument('-o', '--species_code',
                         required = True,
                         choices = ['hsa'],
@@ -130,14 +120,12 @@ def main():
                         required = True,
                         help = 'Path to directory containing bams.',
     )
-    parser.add_argument('-x', '--db_connect',                  
+    parser.add_argument('-c', '--db_connect',                  
                         required = True,
                         help = 'Path to db_connection file',                  
     )
     args = parser.parse_args()
 
-    mirna_db = args.mirna_db
-    ucsc_db = args.ucsc_db
     species_code = args.species_code
     sam_path = args.sam_path
     connect_path = args.db_connect    
@@ -160,7 +148,7 @@ def main():
 
     # Annotate the SAM files
     logger.info('Beginning: SAM file annotation')
-    annotate_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/annotation/annotate.pl', '-m', mirna_db, '-u', ucsc_db, '-o', species_code, '-s', sam_path]
+    annotate_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/annotation/annotate.pl', '-d', connect_path, '-o', species_code, '-s', sam_path]
     do_command(annotate_CMD, logger)
     # Store time command will go here
     logger.info('Completed: SAM file annotation')

@@ -13,10 +13,10 @@ requirements:
 class: CommandLineTool
 
 inputs:
-  - id: "#mirna_db"
+  - id: "#db_connect"
     type: string
     inputBinding:
-      prefix: -m
+      prefix: -c
       
   - id: "#species_code"
     type: string
@@ -34,11 +34,6 @@ inputs:
       prefix: -r
 
   - id: "#crossmapped_path"
-    type: File
-    inputBinding:
-      prefix: -c
-
-  - id: "#connect_path"
     type: File
     inputBinding:
       prefix: -x
