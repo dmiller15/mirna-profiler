@@ -36,33 +36,53 @@ def main():
                         required = True,
                         help = 'Desired name for output SAM.',
     )
+    parser.add_argument('-u', '--uuid',
+                        required = True,
+                        help = 'UUID/GDC_ID for the harmonized BAM.',
+    )
 
+    # Optional DB Flags
+    parser.add_argument('--db_cred_s3url',
+                        required = False,
+                        help = 'String s3url of the postgres db_cred file',
+    )
+    parser.add_argument('--s3cfg_path'.
+                        required = False,
+                        help = 'Path to the s3cfg file.',
+    )
+    
     args = parser.parse_args()
 
     bam_path = args.bam_path
     output_name = args.output_name
+    uuid = args.uuid
 
-    # Logging Setup
-    logging.basicConfig(
-        filename = 'profiling_samtools.log',
-        filemode = 'a',
-        level = args.level,
-        format = '%(asctime)s %(levelname)s %(message)s',
-        datefmt = '%Y-%m-%d_%H:%M:%S_%Z',
-    )
-    logging.getLogger('sqlalchemp.engine').setLevel(logging.INFO)
-    logger = logging.getLogger(__name__)
-    hostname = os.uname()[1]
-    logger.info('hostname=%s' % hostname)
+    if args.db_cred_s3url:
+        db_cred_s3url = args.db_cred_s3url
+        s3cfg_path = args.s3cfg_path
+    else:
+        db_cred_s3url = None
 
-    engine_path = 'sqlite:///' + 'profiling_samtools.db'
-    engine = sqlalchemy.create_engine(engine_path, isolation_level='SERIALIZABLE')
+    logger = pipe_util.setup_logging('mir_profiler_samtools', args, uuid)
+    
+    if db_cred_s3url is not None:
+        conn_dict = pipe_util.get_connect_dict(db_cred_s3url, s3cfg_path, logger)
+        engine = sqlalchemy.create_engine(sqlalchemy.engine.url.URL(**conn_dict))
+    else: #local sqllite case
+        sqlite_name = 'mir_profiler_samtools' + uuid + '.db'
+        engine_path = 'sqlite:///' + sqlite_name
+        engine = sqlalchemy.create_engine(engine_path, isolation_level='SERIALIZABLE')
 
     # Convert the BAMs to SAMs if they do not already exist
     logger.info('Beginning: BAM to SAM conversion')
     BAMtoSAM_CMD = ['samtools', 'view', '-h', bam_path, '-o', output_name]
     shell_BtS_CMD = ' '.join(BAMtoSAM_CMD)
-    pipe_util.do_shell_command(shell_BtS_CMD, logger)
+    output = pipe_util.do_shell_command(shell_BtS_CMD, logger)
+    df = time_util.store_time(uuid, shell_BtS_CMD, output, logger)
+    df['bam_path'] = bam_path
+    unique_key_dict = {'uuid': uuid, 'bam_path': bam_path}
+    table_name = 'time_mem_mir_samtools_view'
+    df_util.save_df_to_sqlalchemy(df, unique_key_dict, table_name, engine, logger)
     logger.info('Completed: BAM to SAM conversion')
 
 if __name__ == '__main__':

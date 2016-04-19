@@ -58,7 +58,7 @@ def main():
     # Get stats from the alignment annotations
     logger.info('Beginning: Alignment stats generation')
     stats_CMD = ['perl', '/home/ubuntu/bin/mirna-profiler/v0.2.7/code/library_stats/alignment_stats.pl', '-s', sam_path, '-a', adapter_path]
-    do_command(stats_CMD, logger)
+    pipe_util.do_command(stats_CMD, logger)
     # Store time command will go here
     logger.info('Completed: Alignment stats generation')
 
