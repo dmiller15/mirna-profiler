@@ -44,7 +44,7 @@ def main():
                         required = False,
                         help = 'String s3url of the postgres db_cred file',
     )
-    parser.add_argument('-z', '--s3cfg_path'.
+    parser.add_argument('-z', '--s3cfg_path',
                         required = False,
                         help = 'Path to the s3cfg file.',
     )
