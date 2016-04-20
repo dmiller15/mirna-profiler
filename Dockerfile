@@ -6,12 +6,13 @@ RUN apt-get update && apt-get install -y --force-yes \
     openjdk-8-jre-headless \
     s3cmd \
     libdbd-pg-perl \
+    r-base \
     samtools
 
 USER ubuntu
 ENV HOME /home/ubuntu
 
-ENV mirna-profiler 0.37
+ENV mirna-profiler 0.38
 
 RUN mkdir ${HOME}/bin
 WORKDIR ${HOME}/bin
