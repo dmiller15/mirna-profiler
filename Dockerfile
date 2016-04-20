@@ -18,7 +18,7 @@ WORKDIR ${HOME}/bin
 RUN git clone -b develop https://github.com/dmiller15/mirna-profiler.git
 
 RUN /bin/bash -c "source ${HOME}/.local/bin/virtualenvwrapper.sh \
-    && source ~/.virtualenvs/p3/bin/activate" \
+    && source ~/.virtualenvs/p3/bin/activate \
     && pip install psycopg2"
 
 WORKDIR ${HOME}
