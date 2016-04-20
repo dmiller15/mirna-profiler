@@ -9,7 +9,8 @@ import subprocess
 import pandas as pd
 #
 import pipe_util
-
+import df_util
+import time_util
 
 #
 
@@ -80,7 +81,7 @@ def main():
     output = pipe_util.do_shell_command(shell_BtS_CMD, logger)
     df = time_util.store_time(uuid, shell_BtS_CMD, output, logger)
     df['bam_path'] = bam_path
-    unique_key_dict = {'uuid': uuid, 'bam_path': bam_path}
+    unique_key_dict = {'uuid': uuid, 'bam_name': bam_path}
     table_name = 'time_mem_mir_samtools_view'
     df_util.save_df_to_sqlalchemy(df, unique_key_dict, table_name, engine, logger)
     logger.info('Completed: BAM to SAM conversion')
