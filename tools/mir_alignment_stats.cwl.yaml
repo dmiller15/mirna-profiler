@@ -1,9 +1,17 @@
 #!/usr/bin/cwl-runner
 
 description: |
-  Annotated read information is collated into summary reports by alignment_stats.pl.
+  Annotated read information is collated into summary reports by
+  alignment_stats.pl.
 
-  Usage: cwl-runner <this-file-path> --sam_path <sam_path> --adapter_path <adapter_path>
+  Usage: cwl-runner <this-file-path> XXXX
+  Options:
+    --sam_path		XXXX
+    --adapter_path	XXXX
+    --uuid		XXXX
+    --barcode		XXXX
+    --db_cred_s3url	XXXX
+    --s3cfg_path	XXXX
 
 requirements:
   - class: DockerRequirement
@@ -16,10 +24,31 @@ inputs:
     type: File
     inputBinding:
       prefix: -s
+
   - id: "#adapter_path"
     type: File
     inputBinding:
       prefix: -a
+
+  - id: "#uuid"
+    type: string
+    inputBinding:
+      prefix: -u
+
+  - id: "#barcode"
+    type: string
+    inputBinding:
+      prefix: -r
+
+  - id: "#db_cred_s3url"
+    type: string
+    inputBinding:
+      prefix: -y
+
+  - id: "#s3cfg_path"
+    type: File
+    inputBinding:
+      prefix: -z
 
 outputs:
   - id: "#alignment_stats"
@@ -154,5 +183,9 @@ outputs:
       items: File
     outputBinding:
       glob: ./feature/bed/*.txt.gz
+  - id: "#stats_log"
+    type: File
+    outputBinding:
+      glob: ./*.log
 
-baseCommand: ["python3", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_alignment_stats.py"]
+baseCommand: ["python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_alignment_stats.py"]

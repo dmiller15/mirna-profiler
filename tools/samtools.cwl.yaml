@@ -3,9 +3,14 @@
 description: |
   Run samtools.
 
-  Usage: >
-    cwl-runner <this-file-path> --bam_path <bam_path> 
-    --output_name <output_name>
+  Usage: cwl-runner <this-file-path> XXXX
+  Options:
+    --bam_path		XXXX 
+    --output_name 	XXXX
+    --barcode		XXXX
+    --uuid		XXXX
+    --db_cred_s3url	XXXX
+    --s3cfg_path	XXXX
 
 requirements:
   - class: DockerRequirement
@@ -24,6 +29,26 @@ inputs:
     inputBinding:
       prefix: -o
 
+  - id: "#uuid"
+    type: string
+    inputBinding:
+      prefix: -u
+
+  - id: "#barcode"
+    type: string
+    inputBinding:
+      prefix: -r
+
+  - id: "#db_cred_s3url"
+    type: string
+    inputBinding:
+      prefix: -y
+
+  - id: "#s3cfg_path"
+    type: File
+    inputBinding:
+      prefix: -z
+
 outputs:
   - id: "#sam_file"
     type: File
@@ -32,4 +57,9 @@ outputs:
         engine: cwl:JsonPointer
         script: /job/output_name
 
-baseCommand: ["python3", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_samtools.py"]
+  - id: "#samtools_log"
+    type: File
+    outputBinding:
+      glob: ./*.log
+
+baseCommand: ["python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_samtools.py"]

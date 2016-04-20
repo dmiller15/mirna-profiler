@@ -18,6 +18,18 @@ inputs:
   - id: "#connect_path"
     type: File
 
+  - id: "#uuid"
+    type: string
+
+  - id: "#barcode"
+    type: string
+
+  - id: "#db_cred_s3url"
+    type: string
+
+  - id: "#s3cfg_path"
+    type: File
+
 outputs:
   - id: "#adapter_report"
     type: File
@@ -141,6 +153,30 @@ outputs:
   - id: "#tRNA"
     type: File
     source: "#mir_alignment_stats.tRNA"
+  - id: "#adapter_log"
+    type: File
+    source: "#mir_adapter_report.adapter_log"
+  - id: "#stats_log"
+    type: File
+    source: "#mir_alignment_stats.stats_log"
+  - id: "#matrix_log"
+    type: File
+    source: "#mir_expn_matrix.matrix_log"
+  - id: "#mimat_log"
+    type: File
+    source: "#mir_expn_mimat.mimat_log"
+  - id: "#graph_log"
+    type: File
+    source: "#mir_graph.graph_log"
+  - id: "#annotation_log"
+    type: File
+    source: "#mir_sam_annotator.annotation_log"
+  - id: "#tcga_log"
+    type: File
+    source: "#mir_tcga.tcga_log"
+  - id: "#samtools_log"
+    type: File
+    source: "#samtools.samtools_log"
 
 steps:
   - id: "#samtools"
@@ -150,16 +186,34 @@ steps:
         source: "#bam_path"
       - id: "#samtools.output_name"
         source: "#sam_name"
+      - id: "#samtools.uuid"
+        source: "#uuid"
+      - id: "#samtools.barcode"
+        source: "#barcode"
+      - id: "samtools.db_cred_s3url"
+        source: "#db_cred_s3url"
+      - id: "#samtools.s3cfg_path"
+        source: "#s3cfg_path"
     outputs:
       - id: "#samtools.sam_file"
+      - id: "#samtools.samtools_log"
 
   - id: "#mir_adapter_report"
     run: {import: ../tools/mir_adapter_report.cwl.yaml}
     inputs:
       - id: "#mir_adapter_report.sam_path"
         source: "#samtools.sam_file"
+      - id: "#mir_adapter_report.uuid"
+        source: "#uuid"
+      - id: "#mir_adapter_report.barcode"
+        source: "#barcode"
+      - id: "#mir_adapter_report.db_cred_s3url"
+        source: "#db_cred_s3url"
+      - id: "#mir_adapter_report.s3cfg_path"
+        source: "#s3cfg_path"	
     outputs:
       - id: "#mir_adapter_report.adapter_report"
+      - id: "#mir_adapter_report.adapter_log"
   
   - id: "#mir_sam_annotator"
     run: {import: ../tools/mir_sam_annotator.cwl.yaml}
@@ -169,9 +223,18 @@ steps:
       - id: "#mir_sam_annotator.db_connect"
         source: "#connect_path"
       - id: "#mir_sam_annotator.species_code"
-        source: "#species_code" 
+        source: "#species_code"
+      - id: "#mir_sam_annotatort.uuid"
+        source: "#uuid"
+      - id: "#mir_sam_annotator.barcode"
+        source: "#barcode"
+      - id: "#mir_sam_annotator.db_cred_s3url"
+        source: "#db_cred_s3url"
+      - id: "#mir_sam_annotator.s3cfg_path"
+        source: "#s3cfg_path"
     outputs:
       - id: "#mir_sam_annotator.annot_sam"
+      - id: "#mir_sam_annotator.annotation_log"
   
   - id: "#mir_alignment_stats"
     run: {import: ../tools/mir_alignment_stats.cwl.yaml}
@@ -179,7 +242,15 @@ steps:
       - id: "#mir_alignment_stats.sam_path"
         source: "#mir_sam_annotator.annot_sam"
       - id: "#mir_alignment_stats.adapter_path"
-        source: "#mir_adapter_report.adapter_report" 
+        source: "#mir_adapter_report.adapter_report"
+      - id: "#mir_alignment_stats.uuid"
+        source: "#uuid"
+      - id: "#mir_alignment_stats.barcode"
+        source: "#barcode"
+      - id: "#mir_alignment_stats.db_cred_s3url"
+        source: "#db_cred_s3url"
+      - id: "#mir_alignment_stats.s3cfg_path"
+        source: "#s3cfg_path"	
     outputs:
       - id: "#mir_alignment_stats.alignment_stats"
       - id: "#mir_alignment_stats.mirna_species"
@@ -207,6 +278,7 @@ steps:
       - id: "#mir_alignment_stats.snRNA"
       - id: "#mir_alignment_stats.srpRNA"
       - id: "#mir_alignment_stats.tRNA"
+      - id: "#mir_alignment_stats.stats_log"
 
   - id: "#mir_tcga"
     run: {import: ../tools/mir_tcga.cwl.yaml}
@@ -225,9 +297,18 @@ steps:
         source: "#mir_alignment_stats.crossmapped"
       - id: "#mir_tcga.isoforms"
         source: "#mir_alignment_stats.isoforms"
+      - id: "#mir_tcga.uuid"
+        source: "#uuid"
+      - id: "#mir_tcga.barcode"
+        source: "#barcode"
+      - id: "#mir_tcga.db_cred_s3url"
+        source: "#db_cred_s3url"
+      - id: "#mir_tcga.s3cfg_path"
+        source: "#s3cfg_path"
     outputs:
       - id: "#mir_tcga.isoform_quant"
       - id: "#mir_tcga.mirna_quant"
+      - id: "#mir_tcga.tcga_log"
 
   - id: "#mir_expn_matrix"
     run: {import: ../tools/mir_expn_matrix.cwl.yaml}
@@ -240,10 +321,19 @@ steps:
         source: "#mir_sam_annotator.annot_sam"
       - id: "#mir_expn_matrix.mirna_species"
         source: "#mir_alignment_stats.mirna_species"
+      - id: "#mir_expn_matrix.uuid"
+        source: "#uuid"
+      - id: "#mir_expn_matrix.barcode"
+        source: "#barcode"
+      - id: "#mir_expn_matrix.db_cred_s3url"
+        source: "#db_cred_s3url"
+      - id: "#mir_expn_matrix.s3cfg_path"
+        source: "#s3cfg_path"
     outputs:
       - id: "#mir_expn_matrix.matrix"
       - id: "#mir_expn_matrix.matrix_norm"
       - id: "#mir_expn_matrix.matrix_norm_log"
+      - id: "#mir_expn_matrix.matrix_log"
 
   - id: "#mir_expn_mimat"
     run: {import: ../tools/mir_expn_mimat.cwl.yaml}
@@ -258,10 +348,19 @@ steps:
         source: "#mir_alignment_stats.mirna"
       - id: "#mir_expn_mimat.crossmapped_path"
         source: "#mir_alignment_stats.crossmapped"
+      - id: "#mir_expn_mimat.uuid"
+        source: "#uuid"
+      - id: "#mir_expn_mimat.barcode"
+        source: "#barcode"
+      - id: "#mir_expn_mimat.db_cred_s3url"
+        source: "#db_cred_s3url"
+      - id: "#mir_expn_mimat.s3cfg_path"
+        source: "#s3cfg_path"
     outputs:
       - id: "#mir_expn_mimat.mimat"
       - id: "#mir_expn_mimat.mimat_norm"
       - id: "#mir_expn_mimat.mimat_norm_log"
+      - id: "#mir_expn_mimat.mimat_log"
 
   - id: "#mir_graph"
     run: {import: ../tools/mir_graph.cwl.yaml}
@@ -278,9 +377,18 @@ steps:
         source: "#mir_alignment_stats.chastity_taglen"
       - id: "#mir_graph.alignment_stats"
         source: "#mir_alignment_stats.alignment_stats"
+      - id: "#mir_graph.uuid"
+        source: "#uuid"
+      - id: "#mir_graph.barcode"
+        source: "#barcode"
+      - id: "#mir_graph.db_cred_s3url"
+        source: "#db_cred_s3url"
+      - id: "#mir_graph.s3cfg_path"
+        source: "#s3cfg_path"
     outputs:
       - id: "#mir_graph.tags_graph"
       - id: "#mir_graph.softclip_graph"
       - id: "#mir_graph.adapter_graph"
       - id: "#mir_graph.chastity_graph"
       - id: "#mir_graph.saturation_graph"
+      - id: "#mir_graph.graph_log"

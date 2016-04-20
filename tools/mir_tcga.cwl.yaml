@@ -1,14 +1,24 @@
 #!/usr/bin/env cwl-runner
 
 description: |
-  The tcga.pl script resolves crossmapped and multimapped reads then formats resulting 
-  expression files to the format defined for TCGA. Can be run on a desktop computer. 
+  The tcga.pl script resolves crossmapped and multimapped reads then formats
+  resulting expression files to the format defined for TCGA. Can be run on a
+  desktop computer. 
   Needs miRBase access.
 
-  Usage: >
-    cwl-runner <this-file-path> --db_connect <connect_path>  --species_code <species_code> 
-    --sam_path <sam_path> --mirna_species <mirna_species_path> --crossmapped <crossmapped_path> 
-    --isoforms <isoforms_path>
+  Usage: cwl-runner <this-file-path> XXXX
+  Options:
+    --db_connect	XXXX
+    --species_code	XXXX 
+    --sam_path 		XXXX
+    --mirna_species 	XXXX
+    --crossmapped 	XXXX
+    --isoforms 		XXXX
+    --uuid		XXXX
+    --barcode		XXXX
+    --db_cred_s3url	XXXX
+    --s3cfg_path	XXXX
+    
 
 requirements:
   - class: DockerRequirement
@@ -20,7 +30,7 @@ inputs:
   - id: "#db_connect"
     type: File 
     inputBinding:
-      prefix: -c
+      prefix: -w
       
   - id: "#genome_version"
     type: string
@@ -30,7 +40,7 @@ inputs:
   - id: "#species_code"
     type: string
     inputBinding:
-      prefix: -o
+      prefix: -e
 
   - id: "#sam_path"
     type: File
@@ -40,7 +50,7 @@ inputs:
   - id: "#mirna_species"
     type: File
     inputBinding:
-      prefix: -r
+      prefix: -p
 
   - id: "#crossmapped"
     type: File
@@ -51,6 +61,26 @@ inputs:
     type: File
     inputBinding:
       prefix: -i
+
+  - id: "#uuid"
+    type: string
+    inputBinding:
+      prefix: -u
+
+  - id: "#barcode"
+    type: string
+    inputBinding:
+      prefix: -r
+
+  - id: "#db_cred_s3url"
+    type: string
+    inputBinding:
+      prefix: -y
+
+  - id: "#s3cfg_path"
+    type: File
+    inputBinding:
+      prefix: -z
 
 outputs:
   - id: "#isoform_quant"
@@ -65,4 +95,10 @@ outputs:
     outputBinding:
       glob: ./tcga/mirnas*
 
-baseCommand: ["python3", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_tcga.py"]
+  - id: "#tcga_log"
+    type: File
+    description: "Log file for TCGA run"
+    outputBinding:
+      glob: ./*.log
+
+baseCommand: ["python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_tcga.py"]
