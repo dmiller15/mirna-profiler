@@ -68,7 +68,7 @@ outputs:
       glob: ./*.sam.annot
       
   - id: "#annotation_log"
-    type: file
+    type: File
     outputBinding:
       glob: ./*.log
 

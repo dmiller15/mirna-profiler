@@ -210,7 +210,7 @@ steps:
       - id: "#mir_adapter_report.db_cred_s3url"
         source: "#db_cred_s3url"
       - id: "#mir_adapter_report.s3cfg_path"
-        source: "#s3cfg_path"	
+        source: "#s3cfg_path"
     outputs:
       - id: "#mir_adapter_report.adapter_report"
       - id: "#mir_adapter_report.adapter_log"
@@ -250,7 +250,7 @@ steps:
       - id: "#mir_alignment_stats.db_cred_s3url"
         source: "#db_cred_s3url"
       - id: "#mir_alignment_stats.s3cfg_path"
-        source: "#s3cfg_path"	
+        source: "#s3cfg_path"
     outputs:
       - id: "#mir_alignment_stats.alignment_stats"
       - id: "#mir_alignment_stats.mirna_species"
