@@ -100,7 +100,7 @@ def main():
     df = time_util.store_time(uuid, mimat_CMD, output, logger)
     df['bam_name'] = barcode
     unique_key_dict = {'uuid': uuid, 'bam_name': barcode}
-    table_name = 'time_mem_mir_test'
+    table_name = 'time_mem_mir_expn_mimat'
     df_util.save_df_to_sqlalchemy(df, unique_key_dict, table_name, engine, logger)
     logger.info('Completed: Mature miRNA gene expression matrix genreation')
 

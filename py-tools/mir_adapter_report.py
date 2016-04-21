@@ -81,7 +81,7 @@ def main():
     df = time_util.store_time(uuid, shell_adapter_CMD, output, logger)
     df['bam_name'] = barcode
     unique_key_dict = {'uuid': uuid, 'bam_name': barcode}
-    table_name = 'time_mem_mir_test'
+    table_name = 'time_mem_mir_adapter_report'
     df_util.save_df_to_sqlalchemy(df, unique_key_dict, table_name, engine, logger)
     logger.info('Completed: Adapter report generation')
 

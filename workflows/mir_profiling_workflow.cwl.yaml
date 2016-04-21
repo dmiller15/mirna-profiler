@@ -371,7 +371,7 @@ steps:
         source: "#mir_alignment_stats.filtered_taglen"
       - id: "#mir_graph.softclip_taglen"
         source: "#mir_alignment_stats.softclip_taglen"
-      - id: "#mir_graph.adapter_taglen"
+      - id: "#mir_graph.adapter_report"
         source: "#mir_adapter_report.adapter_report" 
       - id: "#mir_graph.chastity_taglen"
         source: "#mir_alignment_stats.chastity_taglen"

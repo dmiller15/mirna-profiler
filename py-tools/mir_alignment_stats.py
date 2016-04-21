@@ -82,7 +82,7 @@ def main():
     df = time_util.store_time(uuid, stats_CMD, output, logger)
     df['bam_name'] = barcode
     unique_key_dict = {'uuid': uuid, 'bam_name': barcode}
-    table_name = 'time_mem_mir_test'
+    table_name = 'time_mem_mir_alignment_stats'
     df_util.save_df_to_sqlalchemy(df, unique_key_dict, table_name, engine, logger)
     logger.info('Completed: Alignment stats generation')
 
