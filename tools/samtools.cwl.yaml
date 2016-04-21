@@ -60,6 +60,6 @@ outputs:
   - id: "#samtools_log"
     type: File
     outputBinding:
-      glob: ./*.log
+      glob: ./*samtools.log
 
 baseCommand: ["/home/ubuntu/.virtualenvs/p3/bin/python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_samtools.py"]

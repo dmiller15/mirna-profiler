@@ -70,6 +70,6 @@ outputs:
   - id: "#annotation_log"
     type: File
     outputBinding:
-      glob: ./*.log
+      glob: ./*annotator.log
 
 baseCommand: ["/home/ubuntu/.virtualenvs/p3/bin/python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_sam_annotator.py"]

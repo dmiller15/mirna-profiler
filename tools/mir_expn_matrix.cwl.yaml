@@ -85,6 +85,6 @@ outputs:
     type: File
     description: "Run log of matrix command"
     outputBinding:
-      glob: ./*.log
+      glob: ./*matrix.log
 
 baseCommand: ["/home/ubuntu/.virtualenvs/p3/bin/python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_expn_matrix.py"]

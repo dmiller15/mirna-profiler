@@ -99,6 +99,6 @@ outputs:
     type: File
     description: "Log file for TCGA run"
     outputBinding:
-      glob: ./*.log
+      glob: ./*tcga.log
 
 baseCommand: ["/home/ubuntu/.virtualenvs/p3/bin/python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_tcga.py"]

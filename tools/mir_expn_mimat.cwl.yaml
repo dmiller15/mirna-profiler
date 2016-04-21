@@ -91,6 +91,6 @@ outputs:
     type: File
     description: "Run log of mimat command"
     outputBinding:
-      glob: ./*.log
+      glob: ./*mimat.log
 
 baseCommand: ["/home/ubuntu/.virtualenvs/p3/bin/python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_expn_mimat.py"]

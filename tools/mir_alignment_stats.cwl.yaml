@@ -186,6 +186,6 @@ outputs:
   - id: "#stats_log"
     type: File
     outputBinding:
-      glob: ./*.log
+      glob: ./*stats.log
 
 baseCommand: ["/home/ubuntu/.virtualenvs/p3/bin/python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_alignment_stats.py"]
