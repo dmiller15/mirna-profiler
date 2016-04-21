@@ -72,4 +72,4 @@ outputs:
     outputBinding:
       glob: ./*.log
 
-baseCommand: ["python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_sam_annotator.py"]
+baseCommand: ["/home/ubuntu/.virtualenvs/p3/bin/python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_sam_annotator.py"]
