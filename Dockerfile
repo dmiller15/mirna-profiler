@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y --force-yes \
 USER ubuntu
 ENV HOME /home/ubuntu
 
-ENV mirna-profiler 0.40
+ENV mirna-profiler 0.41
 
 RUN mkdir ${HOME}/bin
 WORKDIR ${HOME}/bin
