@@ -1,0 +1,96 @@
+#!/usr/bin/env cwl-runner
+
+description: |
+  Uses queries miRBase to convert MIMAT IDs to miR names and gets read counts
+  from crossmapped.txt.
+  
+  Usage: cwl-runner <this-file-path> XXXX
+  Options:
+    --db_connect	XXXX
+    --species_code	XXXX
+    --sam_path		XXXX
+    --mirna_path	XXXX
+    --crossmapped_path	XXXX
+    --uuid		XXXX
+    --barcode 		XXXX
+    --db_cred_s3url	XXXX
+    --s3cfg_path	XXXX
+
+requirements:
+  - class: DockerRequirement
+    dockerPull: quay.io/dmiller15/mir-profiler
+
+class: CommandLineTool
+
+inputs:
+  - id: "#db_connect"
+    type: File 
+    inputBinding:
+      prefix: -w
+      
+  - id: "#species_code"
+    type: string
+    inputBinding:
+      prefix: -e
+      
+  - id: "#sam_path"
+    type: File
+    inputBinding:
+      prefix: -s
+
+  - id: "#mirna_path"
+    type: File
+    inputBinding:
+      prefix: -m
+
+  - id: "#crossmapped_path"
+    type: File
+    inputBinding:
+      prefix: -x
+
+  - id: "#uuid"
+    type: string
+    inputBinding:
+      prefix: -u
+
+  - id: "#barcode"
+    type: string
+    inputBinding:
+      prefix: -r
+
+  - id: "#db_cred_s3url"
+    type: string
+    inputBinding:
+      prefix: -y
+
+  - id: "#s3cfg_path"
+    type: File
+    inputBinding:
+      prefix: -z
+
+outputs:
+  - id: "#mimat"
+    type: File
+    description: "mimat file"
+    outputBinding:
+      glob: ./expn_matrix_mimat.txt
+
+  - id: "#mimat_norm"
+    type: File
+    description: "mimat norm"
+    outputBinding:
+      glob: ./expn_matrix_mimat_norm.txt
+
+  - id: "#mimat_norm_log"
+    type: File
+    description: "mimat norm log"
+    outputBinding:
+      glob: ./expn_matrix_mimat_norm_log.txt
+
+  - id: "#mimat_log"
+    type: File
+    description: "Run log of mimat command"
+    outputBinding:
+      glob: ./*mimat.log
+
+baseCommand: ["/home/ubuntu/.virtualenvs/p3/bin/python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_expn_mimat.py"]

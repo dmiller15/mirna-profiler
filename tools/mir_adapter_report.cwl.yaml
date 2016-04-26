@@ -1,0 +1,57 @@
+#!/usr/bin/env cwl-runner
+
+description: |
+  Generates an adapter report for alignments did not have adapter trimming run.
+
+  Usage: cwl-runner <this_file_path> XXXX
+  Options:
+    --sam_path		XXXX
+    --uuid		XXXX
+    --barcode		XXXX
+    --db_cred_s3url	XXXX
+    --s3cfg_path	XXXX
+
+requirements:
+  - class: DockerRequirement
+    dockerPull: quay.io/dmiller15/mir-profiler
+
+class: CommandLineTool
+
+inputs:
+  - id: "#sam_path"
+    type: File
+    inputBinding:
+      prefix: -s
+
+  - id: "#uuid"
+    type: string
+    inputBinding:
+      prefix: -u
+
+  - id: "#barcode"
+    type: string
+    inputBinding:
+      prefix: -r
+
+  - id: "#db_cred_s3url"
+    type: string
+    inputBinding:
+      prefix: -y
+
+  - id: "#s3cfg_path"
+    type: File
+    inputBinding:
+      prefix: -z
+
+outputs:
+  - id: "#adapter_report"
+    type: File
+    outputBinding:
+      glob: ./*adapter.report
+
+  - id: "#adapter_log"
+    type: File
+    outputBinding:
+      glob: ./*adapter_report.log
+
+baseCommand: ["/home/ubuntu/.virtualenvs/p3/bin/python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_adapter_report.py"]

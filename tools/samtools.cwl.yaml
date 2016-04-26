@@ -1,0 +1,65 @@
+#!/usr/bin/env cwl-runner
+
+description: |
+  Run samtools.
+
+  Usage: cwl-runner <this-file-path> XXXX
+  Options:
+    --bam_path		XXXX 
+    --output_name 	XXXX
+    --barcode		XXXX
+    --uuid		XXXX
+    --db_cred_s3url	XXXX
+    --s3cfg_path	XXXX
+
+requirements:
+  - class: DockerRequirement
+    dockerPull: quay.io/dmiller15/mir-profiler
+
+class: CommandLineTool
+
+inputs:
+  - id: "#bam_path"
+    type: File
+    inputBinding:
+      prefix: -b
+
+  - id: "#output_name"
+    type: string
+    inputBinding:
+      prefix: -o
+
+  - id: "#uuid"
+    type: string
+    inputBinding:
+      prefix: -u
+
+  - id: "#barcode"
+    type: string
+    inputBinding:
+      prefix: -r
+
+  - id: "#db_cred_s3url"
+    type: string
+    inputBinding:
+      prefix: -y
+
+  - id: "#s3cfg_path"
+    type: File
+    inputBinding:
+      prefix: -z
+
+outputs:
+  - id: "#sam_file"
+    type: File
+    outputBinding:
+      glob:
+        engine: cwl:JsonPointer
+        script: /job/output_name
+
+  - id: "#samtools_log"
+    type: File
+    outputBinding:
+      glob: ./*samtools.log
+
+baseCommand: ["/home/ubuntu/.virtualenvs/p3/bin/python", "/home/ubuntu/bin/mirna-profiler/py-tools/mir_samtools.py"]
