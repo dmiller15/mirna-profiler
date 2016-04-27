@@ -182,7 +182,7 @@ outputs:
       type: array
       items: File
     outputBinding:
-      glob: ./feature/bed/*.txt.gz
+      glob: ./features/bed/*.txt.gz
   - id: "#stats_log"
     type: File
     outputBinding:

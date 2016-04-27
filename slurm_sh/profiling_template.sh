@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --workdir=XX_SCRATCH_DIR_XX
+#SBATCH --workdir=/mnt/SCRATCH
 #SBATCH --cpus-per-task=XX_THREAD_COUNT_XX
 #SBATCH --mem=18000
 ##deb reqs: python-dev libssl-dev s3cmd
 #environment variables
-SCRATCH_DIR="XX_SCRATCH_DIR_XX"
-THREAD_COUNT=XX_THREAD_COUNT_XX
+SCRATCH_DIR="/mnt/SCRATCH"
+THREAD_COUNT="XX_THREAD_COUNT_XX"
 
 #job variables
 BAM_URL="XX_BAM_URL_XX"
@@ -15,8 +15,8 @@ CASE_ID="XX_CASE_ID_XX"
 TCGA_BARCODE="XX_BARCODE_XX"
 
 #server environment
-S3_CFG_PULL_PATH="XX_S3_CFG_PULL_PATH_XX"
-S3_CFG_PUSH_PATH="XX_S3_CFG_PUSH_PATH_XX"
+S3_CFG_PULL_PATH="/home/ubuntu/.s3cfg.cleversafe"
+S3_CFG_PUSH_PATH="/home/ubuntu/.s3cfg.ceph"
 EXPORT_PROXY_STR="export http_proxy=http://cloud-proxy:3128; export https_proxy=http://cloud-proxy:3128;"
 DB_CONNECT_URL="s3://bioinformatics_scratch/mir_tools/db_connections.cfg"
 DB_CRED_URL="s3://bioinformatics_scratch/mir_tools/connect_dmiller.ini"
@@ -48,9 +48,8 @@ CWLTOOL_HASH="221cf2395b2745ae1c3899c691d94edf3152327d"
 #input bucket
 S3_MIRASEQ_BUCKET="s3://tcga_mirnaseq_alignment_3"
 #output buckets
-S3_OUT_BUCKET="s3://ceph_qcpass_tcga_exome_blca_coclean" #make new buckets
-S3_LOG_BUCKET="s3://ceph_qcpass_tcga_exome_blca_coclean_log"
-
+S3_OUT_BUCKET="s3://tcga_mirna_profiling"
+S3_LOG_BUCKET="s3://tcga_mirna_profiling_log"
 
 function remove_data()
 {
@@ -301,7 +300,7 @@ function run_profiling()
     local bam_url="$2"
     local case_id="$3"
     local profiling_workflow="$4"
-    local connect_path="$5"
+    local connect_url="$5"
     local barcode="$6"
     local git_cwl_repo="$7"
     local db_cred_s3url="$8"
@@ -313,6 +312,8 @@ function run_profiling()
     local gdc_id=$(basename $(dirname ${bam_url}))
     local bam_name=$(basename ${bam_url})
     local bam_path=${data_dir}/${bam_name}
+    local connect_name=$(basename ${connect_url})
+    local connect_path=${data_dir}/${connect_name}
 
     local sam_name=${barcode}".sam"
     get_git_name "${git_cwl_repo}"
@@ -329,7 +330,7 @@ function run_profiling()
     cd ${profiling_dir}
     
     # setup cwl command removed  --leave-tmpdir
-    local cwl_command="--debug --outdir ${profiling_dir} --tmpdir-prefix ${tmp_dir} --tmp-outdir-prefix ${tmpout_dir} ${workflow_path} --bam_path ${bam_path} --sam_name ${sam_name}  --genome_version ${genome_version} --connect_path ${connect_path} --uuid ${gdc_id} --barcode ${barcode} --db_cred_s3url ${db_cred_s3url} --s3cfg_path ${s3_cfg_path}"
+    local cwl_command="--debug --outdir ${profiling_dir} --tmpdir-prefix ${tmp_dir} --tmp-outdir-prefix ${tmpout_dir} ${workflow_path} --bam_path ${bam_path} --sam_name ${sam_name}  --genome_version ${genome_version} --species_code ${species_code} --connect_path ${connect_path} --uuid ${gdc_id} --barcode ${barcode} --db_cred_s3url ${db_cred_s3url} --s3cfg_path ${s3_cfg_path}"
 
     # run cwl
     local this_virtenv_dir=${HOME}/.virtualenvs/p2_${case_id}
@@ -367,15 +368,11 @@ function upload_profiling_results()
     local gdc_id=$(basename $(dirname ${bam_url}))
     local tar_name=${gdc_id}"_auxiliary.tar"
     local tar_path=${profiling_dir}/${tar_name}
-    local mirnas_path=${profiling_dir}/"tcga/mirnas.quanitification.txt"
+    local mirnas_path=${profiling_dir}/"tcga/mirnas.quantification.txt"
     local isoforms_path=${profiling_dir}/"tcga/isoforms.quantification.txt"
     tar cf ${tar_name} *.jpg alignment_stats.csv *.report expn* features/
-    echo "uploading: s3cmd -c ${s3_cfg_path} put ${tar_path} ${S3_OUT_BUCKET}/${gdc_id}/"
-    s3cmd -c ${s3_cfg_path} put ${tar_path} ${s3_out_bucket}/${gdc_id}/
-    echo "uploading: s3cmd -c ${s3_cfg_path} put ${mirnas_path} ${S3_OUT_BUCKET}/${gdc_id}/"
-    s3cmd -c ${s3_cfg_path} put ${bam_path} ${s3_out_bucket}/${gdc_id}/
-    echo "uploading: s3cmd -c ${s3_cfg_path} put ${isoforms_path} ${S3_OUT_BUCKET}/${gdc_id}/"
-    s3cmd -c ${s3_cfg_path} put ${bam_path} ${s3_out_bucket}/${gdc_id}/
+    echo "uploading: s3cmd -c ${s3_cfg_path} put ${tar_path} ${mirnas_path} ${isoforms_path} ${S3_OUT_BUCKET}/${gdc_id}/"
+    s3cmd -c ${s3_cfg_path} put ${tar_path} ${mirnas_path} ${isoforms_path} ${s3_out_bucket}/${gdc_id}/
     echo "s3cmd -c ${s3_cfg_path} put ${profiling_dir}/*.log ${s3_log_bucket}/"
     s3cmd -c ${s3_cfg_path} put ${profiling_dir}/*.log ${s3_log_bucket}/
 }
@@ -422,6 +419,9 @@ function clone_pip_git_hash()
 
 function get_dockercfg()
 {
+    echo ""
+    echo "get_dockercfg()"
+    
     local s3_cfg_path="$1"
     local quay_pull_key_url="$2"
 
@@ -434,12 +434,23 @@ function get_dockercfg()
 
 function get_connect_db()
 {
+    echo ""
+    echo "get_connect_db()"
+    
     local s3_cfg_path="$1"
     local db_connect_url="$2"
+    local data_dir="$3"
+
+    echo "s3_cfg_path=${s3_cfg_path}"
+    echo "db_connect_url=${db_connect_url}"
+    echo "data_dir=${data_dir}"
 
     local prev_wd=`pwd`
-    cd ${HOME}
-    echo 's3cmd -c ${s3_cfg_path} --force get "${db_connect_url}"'
+    echo "cd ${data_dir}"
+    cd ${data_dir}
+    echo "s3cmd -c ${s3_cfg_path} --force get ${db_connect_url}"
+    s3cmd -c ${s3_cfg_path} --force get ${db_connect_url}
+    echo "cd ${prev_wd}"
     cd "${prev_wd}"
 }
 
@@ -458,10 +469,10 @@ function main()
     pip_install_requirements "${GIT_CWL_REPO}" "${CWLTOOL_REQUIREMENTS_PATH}" "${EXPORT_PROXY_STR}" "${data_dir}" "${CASE_ID}"
     clone_pip_git_hash "${CASE_ID}" "${CWLTOOL_URL}" "${CWLTOOL_HASH}" "${data_dir}" "${EXPORT_PROXY_STR}"
     get_dockercfg "${S3_CFG_PULL_PATH}" "${QUAY_PULL_KEY_URL}"
-    get_connect_db "${S3_CFG_PULL_PATH}" "${DB_CONNECT_URL}"
+    get_connect_db "${S3_CFG_PULL_PATH}" "${DB_CONNECT_URL}" "${data_dir}"
     queue_status_update "${data_dir}" "${QUEUE_STATUS_TOOL}" "${GIT_CWL_REPO}" "${GIT_CWL_HASH}" "${CASE_ID}" "${BAM_URL}" "RUNNING" "profiling_caseid_queue" "${S3_CFG_PULL_PATH}" "${DB_CRED_URL}" "${S3_OUT_BUCKET}"
     get_bam_file "${S3_CFG_PULL_PATH}" "${BAM_URL}" "${data_dir}"
-    run_profiling "${data_dir}" "${BAM_URL}" "${CASE_ID}" "${PROFILING_WORKFLOW}" "${DB_CONNECT_URL}" "${BARCODE}" "${GIT_CWL_REPO}"  "${DB_CRED_URL}" "${S3_CFG_PULL_PATH}"
+    run_profiling "${data_dir}" "${BAM_URL}" "${CASE_ID}" "${PROFILING_WORKFLOW}" "${DB_CONNECT_URL}" "${TCGA_BARCODE}" "${GIT_CWL_REPO}" "${DB_CRED_URL}" "${S3_CFG_PULL_PATH}"
     upload_profiling_results "${CASE_ID}" "${BAM_URL}" "${S3_OUT_BUCKET}" "${S3_LOG_BUCKET}" "${S3_CFG_PUSH_PATH}" "${data_dir}"
     queue_status_update "${data_dir}" "${QUEUE_STATUS_TOOL}" "${GIT_CWL_REPO}" "${GIT_CWL_HASH}" "${CASE_ID}" "${BAM_URL}" "COMPLETE" "profiling_caseid_queue" "${S3_CFG_PULL_PATH}" "${DB_CRED_URL}" "${S3_OUT_BUCKET}"
     remove_data "${data_dir}" "${CASE_ID}"
