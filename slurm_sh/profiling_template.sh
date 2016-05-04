@@ -12,7 +12,7 @@ THREAD_COUNT="XX_THREAD_COUNT_XX"
 #job variables
 BAM_URL="XX_BAM_URL_XX"
 CASE_ID="XX_CASE_ID_XX"
-TCGA_BARCODE="XX_BARCODE_XX"
+TCGA_BARCODE="XX_TCGA_BARCODE_XX"
 
 #server environment
 S3_CFG_PULL_PATH="/home/ubuntu/.s3cfg.cleversafe"
@@ -26,7 +26,7 @@ QUAY_PULL_KEY_URL="s3://bioinformatics_scratch/mir_tools/.dockercfg"
 GIT_CWL_SERVER="github.com"
 GIT_CWL_SERVER_FINGERPRINT="2048 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48"
 GIT_CWL_DEPLOY_KEY_S3_URL="s3://bioinformatics_scratch/mir_tools/mirna_profiling_rsa"
-GIT_CWL_REPO="git@github.com:NCI-GDC/mirna-profiler.git"
+GIT_CWL_REPO="git@github.com:dmiller15/mirna-profiler.git"
 GIT_CWL_HASH="XX_GIT_CWL_HASH_XX"
 PROFILING_WORKFLOW="workflows/mir_profiling_workflow.cwl.yaml"
 SAMTOOLS_TOOL="tools/samtools.cwl.yaml"

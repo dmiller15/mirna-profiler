@@ -132,7 +132,7 @@ outputs:
     outputBinding:
       glob: ./features/rmsk_DNA.txt
   - id: "#rmsk_RNA"
-    type: File
+    type: [File, "null"]
     description: "TXT file containing RepeatMasker RNA features"
     outputBinding:
       glob: ./features/rmsk_RNA.txt
@@ -147,7 +147,7 @@ outputs:
     outputBinding:
       glob: ./features/rRNA.txt
   - id: "#Satellite"
-    type: File
+    type: [File, "null"]
     description: "TXT file containing satellite features"
     outputBinding:
       glob: ./features/Satellite.txt
