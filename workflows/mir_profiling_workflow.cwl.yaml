@@ -127,7 +127,7 @@ outputs:
     type: File
     source: "#mir_alignment_stats.rmsk_DNA"
   - id: "#rmsk_RNA"
-    type: File
+    type: [File, "null"]
     source: "#mir_alignment_stats.rmsk_RNA"
   - id: "#rmsk_Simple_repeat"
     type: File
@@ -136,7 +136,7 @@ outputs:
     type: File
     source: "#mir_alignment_stats.rRNA"
   - id: "#Satellite"
-    type: File
+    type: [File, "null"]
     source: "#mir_alignment_stats.Satellite"
   - id: "#scRNA"
     type: File

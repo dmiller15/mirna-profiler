@@ -34,6 +34,7 @@ def write_case_file(template_file, caseid, bamurl, barcode, thread_count, git_ha
                 out_path_open.write(newline)
             elif 'XX_GIT_CWL_HASH_XX' in line:
                 newline = line.replace('XX_GIT_CWL_HASH_XX', git_hash)
+                out_path_open.write(newline)
             else:
                 out_path_open.write(line)
     out_path_open.close()
@@ -51,7 +52,7 @@ def parse_sql_file(sql_file):
                 bamurl = line_split[1].strip()
                 bamurl = bamurl.replace('cleversafe.service.consul/', '')
                 barcode = line_split[2].strip()
-                list.append((caseid, bamurl, barcode))
+                sql_values.append((caseid, bamurl, barcode))
     return sql_values
 
 def main():
@@ -91,7 +92,7 @@ def main():
     parsed_sql = parse_sql_file(sql_file)
     
     for caseid, bamurl, barcode in parsed_sql:
-        print('\nmiRNA_entry=%s\t%s\t%s' % caseid, bamurl, barcode)
+        print('\nmiRNA_entry=%s\t%s\t%s' % (caseid bamurl, barcode))
         write_case_file(template_file, caseid, bamurl, barcode, thread_count, git_hash)
         
 if __name__=='__main__':
